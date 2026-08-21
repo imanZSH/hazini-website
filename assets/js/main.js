@@ -2,7 +2,8 @@
  * Main Interactive Script for Dr. Hazini and Mehr Golestan Foundation
  */
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  await initLiveSiteData();
   initMobileNav();
   highlightActiveNav();
   initStatsCounter();
@@ -10,6 +11,27 @@ document.addEventListener('DOMContentLoaded', () => {
   initModals();
   initForms();
 });
+
+async function initLiveSiteData() {
+  // Check LocalStorage override first (for GitHub Pages testing)
+  const localSaved = localStorage.getItem('hazini_site_data');
+  if (localSaved) {
+    try {
+      window.SITE_DATA = JSON.parse(localSaved);
+    } catch (e) {}
+  }
+
+  // Try fetching fresh data from Live Server API if running on server
+  try {
+    const res = await fetch('/api/data');
+    if (res.ok) {
+      const freshData = await res.json();
+      window.SITE_DATA = freshData;
+    }
+  } catch (err) {
+    // Running statically (GitHub Pages) - window.SITE_DATA remains default or local
+  }
+}
 
 // Toast notification manager
 function showToast(message, type = 'success') {
@@ -365,45 +387,164 @@ function openImageModal(src, title) {
   overlay.classList.add('active');
 }
 
+// Helper: Async Form Submitter with Hybrid API & LocalStorage support
+async function submitSiteForm(payload, formElement, successMessage) {
+  const submitBtn = formElement.querySelector('button[type="submit"]');
+  const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+  
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> در حال ثبت...';
+  }
+
+  try {
+    // 1. Try Server API
+    const res = await fetch('/api/submissions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok) {
+      showToast(successMessage, 'success');
+      formElement.reset();
+      return;
+    }
+  } catch (err) {
+    // 2. Server offline / GitHub Pages (Static hosting fallback)
+    console.log('Server not reachable, saving submission to localStorage (GitHub Pages mode).');
+  }
+
+  // Save to LocalStorage for GitHub Pages / Static testing
+  try {
+    let localSubs = [];
+    const saved = localStorage.getItem('hazini_submissions');
+    if (saved) {
+      localSubs = JSON.parse(saved);
+    }
+    const newId = localSubs.length > 0 ? Math.max(...localSubs.map(s => s.id || 0)) + 1 : 1;
+    const now = new Date();
+    let dateStr = now.toLocaleDateString('fa-IR') + ' - ' + now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
+
+    localSubs.unshift({
+      id: newId,
+      date: dateStr,
+      status: 'unread',
+      ...payload
+    });
+
+    localStorage.setItem('hazini_submissions', JSON.stringify(localSubs));
+    showToast(successMessage, 'success');
+    formElement.reset();
+  } catch (e) {
+    showToast(successMessage, 'success');
+    formElement.reset();
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnHtml;
+    }
+  }
+}
+
 // 6. Interactive Forms
 function initForms() {
-  // Service Request Form
+  // 1. Service Request Form (services.html)
   const serviceForm = document.getElementById('service-request-form');
   if (serviceForm) {
     serviceForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      showToast('درخواست خدمات با موفقیت ثبت شد. کادر درمان به زودی با شما تماس خواهند گرفت.', 'success');
-      serviceForm.reset();
+      const formData = new FormData(serviceForm);
+      const serviceSelect = serviceForm.querySelector('select[name="serviceType"]');
+      const serviceTypeTitle = serviceSelect && serviceSelect.selectedIndex >= 0 ? serviceSelect.options[serviceSelect.selectedIndex].text : '';
+
+      const payload = {
+        type: 'service',
+        typeTitle: 'درخواست خدمات درمانی',
+        patientName: formData.get('patientName') || '',
+        phone: formData.get('phone') || '',
+        disease: formData.get('disease') || '',
+        serviceType: formData.get('serviceType') || '',
+        serviceTypeTitle: serviceTypeTitle,
+        address: formData.get('address') || '',
+        notes: formData.get('notes') || ''
+      };
+
+      submitSiteForm(payload, serviceForm, 'درخواست خدمات درمانی با موفقیت ثبت شد. کادر درمان به زودی با شما تماس خواهند گرفت.');
     });
   }
 
-  // Memorial Banner Order Form
+  // 2. Memorial Banner Order Form (donate.html)
   const bannerForm = document.getElementById('banner-order-form');
   if (bannerForm) {
     bannerForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      showToast('سفارش استند تسلیت ثبت شد. هماهنگی‌های ارسال بنر انجام خواهد شد.', 'success');
-      bannerForm.reset();
+      const formData = new FormData(bannerForm);
+      const bannerSelect = bannerForm.querySelector('select[name="bannerType"]');
+      const bannerTypeTitle = bannerSelect && bannerSelect.selectedIndex >= 0 ? bannerSelect.options[bannerSelect.selectedIndex].text : '';
+
+      const payload = {
+        type: 'banner',
+        typeTitle: 'سفارش بنر تسلیت',
+        ordererName: formData.get('ordererName') || '',
+        phone: formData.get('phone') || '',
+        deceasedName: formData.get('deceasedName') || '',
+        familyName: formData.get('familyName') || '',
+        location: formData.get('location') || '',
+        ceremonyDate: formData.get('ceremonyDate') || '',
+        ceremonyTime: formData.get('ceremonyTime') || '',
+        bannerType: formData.get('bannerType') || '',
+        bannerTypeTitle: bannerTypeTitle
+      };
+
+      submitSiteForm(payload, bannerForm, 'سفارش استند تسلیت ثبت شد. کارشناسان کانون جهت هماهنگی تماس خواهند گرفت.');
     });
   }
 
-  // Volunteer Form
+  // 3. Volunteer Registration Form (donate.html)
   const volunteerForm = document.getElementById('volunteer-form');
   if (volunteerForm) {
     volunteerForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      showToast('اطلاعات داوطلبی شما ثبت شد. با تشکر از همراهی پرمهرتان.', 'success');
-      volunteerForm.reset();
+      const formData = new FormData(volunteerForm);
+      const fieldSelect = volunteerForm.querySelector('select[name="field"]');
+      const fieldTitle = fieldSelect && fieldSelect.selectedIndex >= 0 ? fieldSelect.options[fieldSelect.selectedIndex].text : '';
+
+      const payload = {
+        type: 'volunteer',
+        typeTitle: 'ثبت‌نام داوطلب',
+        name: formData.get('name') || '',
+        phone: formData.get('phone') || '',
+        job: formData.get('job') || '',
+        field: formData.get('field') || '',
+        fieldTitle: fieldTitle,
+        details: formData.get('details') || ''
+      };
+
+      submitSiteForm(payload, volunteerForm, 'اطلاعات داوطلبی شما ثبت شد. با تشکر از همراهی پرمهرتان.');
     });
   }
 
-  // Contact Form
+  // 4. Contact Form (contact.html)
   const contactForm = document.getElementById('contact-form');
   if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      showToast('پیام شما با موفقیت ارسال شد. در اسرع وقت پاسخگوی شما هستیم.', 'success');
-      contactForm.reset();
+      const formData = new FormData(contactForm);
+      const subSelect = contactForm.querySelector('select[name="subject"]');
+      const subjectTitle = subSelect && subSelect.selectedIndex >= 0 ? subSelect.options[subSelect.selectedIndex].text : '';
+
+      const payload = {
+        type: 'contact',
+        typeTitle: 'تماس با ما',
+        name: formData.get('name') || '',
+        phone: formData.get('phone') || '',
+        subject: formData.get('subject') || '',
+        subjectTitle: subjectTitle,
+        message: formData.get('message') || ''
+      };
+
+      submitSiteForm(payload, contactForm, 'پیام شما با موفقیت ارسال شد. در اسرع وقت پاسخگوی شما هستیم.');
     });
   }
 }

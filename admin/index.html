@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>داشبورد مدیریت | پورتال کانون مهر گلستان و دکتر حزینی</title>
+  <link rel="icon" href="../assets/images/cropped-logo-1-32x32.png" sizes="32x32">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+  <div class="admin-wrapper">
+    
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <img src="../assets/images/logo.png" alt="لوگو کانون مهر" class="sidebar-logo" onerror="this.src='../assets/images/logo-1-300x280.png'">
+        <div>
+          <h2 class="sidebar-brand-title">کانون مهر گلستان</h2>
+          <span class="sidebar-brand-subtitle">پنل مدیریت محتوا و فرم‌ها</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-tab="submissions">
+          <div class="nav-item-content">
+            <i class="fa-solid fa-inbox"></i>
+            <span>صندوق فرم‌ها و پیام‌ها</span>
+          </div>
+          <span class="nav-badge" id="unread-count-badge" style="display: none;">0</span>
+        </button>
+
+        <button class="nav-item" data-tab="articles">
+          <div class="nav-item-content">
+            <i class="fa-solid fa-newspaper"></i>
+            <span>مدیریت مقالات</span>
+          </div>
+        </button>
+
+        <button class="nav-item" data-tab="reports">
+          <div class="nav-item-content">
+            <i class="fa-solid fa-file-pdf"></i>
+            <span>گزارش‌های عملکرد</span>
+          </div>
+        </button>
+
+        <button class="nav-item" data-tab="videos">
+          <div class="nav-item-content">
+            <i class="fa-solid fa-video"></i>
+            <span>رسانه و ویدیوها</span>
+          </div>
+        </button>
+
+        <button class="nav-item" data-tab="brochures">
+          <div class="nav-item-content">
+            <i class="fa-solid fa-book-medical"></i>
+            <span>کتب و بروشورها</span>
+          </div>
+        </button>
+
+        <button class="nav-item" data-tab="settings">
+          <div class="nav-item-content">
+            <i class="fa-solid fa-sliders"></i>
+            <span>آمار و تنظیمات سایت</span>
+          </div>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="../index.html" target="_blank" class="btn-view-site">
+          <i class="fa-solid fa-globe"></i>
+          <span>مشاهده وب‌سایت اصلی</span>
+        </a>
+        <button id="export-data-btn" class="btn btn-outline btn-sm" style="color: #CBD5E1; border-color: rgba(255,255,255,0.15); width: 100%;">
+          <i class="fa-solid fa-file-export"></i> خروجی دیتابیس (GitHub)
+        </button>
+        <button id="logout-btn" class="btn btn-danger btn-sm" style="width: 100%;">
+          <i class="fa-solid fa-right-from-bracket"></i> خروج از پنل
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+      
+      <!-- Topbar -->
+      <header class="admin-topbar">
+        <div class="topbar-title">
+          <button id="mobile-toggle-btn" class="btn-icon" style="display: none;" aria-label="منو">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <span id="current-tab-title"><i class="fa-solid fa-inbox"></i> صندوق پیام‌ها و فرم‌های ثبت‌شده</span>
+        </div>
+
+        <div class="topbar-actions">
+          <span id="env-badge" class="mode-badge server">
+            <i class="fa-solid fa-server"></i> <span id="env-text">سرور متصل است</span>
+          </span>
+          <button id="quick-add-btn" class="btn btn-primary btn-sm">
+            <i class="fa-solid fa-plus"></i> <span id="quick-add-text">افزودن محتوا</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Body Container -->
+      <div class="admin-body">
+        
+        <!-- Summary Stats Cards -->
+        <div class="stat-cards-grid">
+          <div class="stat-card red" style="cursor: pointer;" onclick="switchTab('submissions')">
+            <div class="stat-card-info">
+              <h4>فرم‌های جدید بررسی نشده</h4>
+              <div class="stat-val" id="stat-unread-count">۰</div>
+            </div>
+            <div class="stat-card-icon"><i class="fa-solid fa-bell"></i></div>
+          </div>
+
+          <div class="stat-card teal" style="cursor: pointer;" onclick="switchTab('articles')">
+            <div class="stat-card-info">
+              <h4>کل مقالات منتشرشده</h4>
+              <div class="stat-val" id="stat-articles-count">۰</div>
+            </div>
+            <div class="stat-card-icon"><i class="fa-solid fa-newspaper"></i></div>
+          </div>
+
+          <div class="stat-card blue" style="cursor: pointer;" onclick="switchTab('reports')">
+            <div class="stat-card-info">
+              <h4>اسناد گزارش عملکرد</h4>
+              <div class="stat-val" id="stat-reports-count">۰</div>
+            </div>
+            <div class="stat-card-icon"><i class="fa-solid fa-file-pdf"></i></div>
+          </div>
+
+          <div class="stat-card orange" style="cursor: pointer;" onclick="switchTab('videos')">
+            <div class="stat-card-info">
+              <h4>ویدیوها و مستندها</h4>
+              <div class="stat-val" id="stat-videos-count">۰</div>
+            </div>
+            <div class="stat-card-icon"><i class="fa-solid fa-video"></i></div>
+          </div>
+        </div>
+
+        <!-- ================= TAB 1: SUBMISSIONS & INBOX ================= -->
+        <section id="tab-submissions" class="tab-content active">
+          <div class="panel-card">
+            <div class="panel-header">
+              <div class="panel-title-wrap">
+                <h3 class="panel-title">صندوق پیام‌ها و فرم‌های ثبت‌شده</h3>
+                <span class="panel-subtitle">لیست درخواست‌های خدمات، سفارش‌های بنر، ثبت‌نام داوطلبان و تماس‌ها</span>
+              </div>
+
+              <div class="panel-actions">
+                <div class="search-input-wrap">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                  <input type="text" id="submissions-search" class="search-input" placeholder="جستجو بر اساس نام، شماره یا متن...">
+                </div>
+              </div>
+            </div>
+
+            <div style="padding: 16px 24px; background: #F8FAFC; border-bottom: 1px solid var(--border);">
+              <div class="filter-pills-wrap" id="submission-filter-pills">
+                <button class="filter-btn active" data-filter="all">همه فرم‌ها (<span id="count-all-sub">۰</span>)</button>
+                <button class="filter-btn" data-filter="service">درخواست خدمات درمانی (<span id="count-service-sub">۰</span>)</button>
+                <button class="filter-btn" data-filter="banner">سفارش بنر تسلیت (<span id="count-banner-sub">۰</span>)</button>
+                <button class="filter-btn" data-filter="volunteer">ثبت‌نام داوطلبان (<span id="count-volunteer-sub">۰</span>)</button>
+                <button class="filter-btn" data-filter="contact">پیام‌های تماس با ما (<span id="count-contact-sub">۰</span>)</button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>ردیف</th>
+                    <th>نوع فرم</th>
+                    <th>نام متقاضی</th>
+                    <th>شماره تماس</th>
+                    <th>تاریخ ثبت</th>
+                    <th>وضعیت</th>
+                    <th>عملیات</th>
+                  </tr>
+                </thead>
+                <tbody id="submissions-table-body">
+                  <!-- Dynamic Rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= TAB 2: ARTICLES ================= -->
+        <section id="tab-articles" class="tab-content" style="display: none;">
+          <div class="panel-card">
+            <div class="panel-header">
+              <div class="panel-title-wrap">
+                <h3 class="panel-title">مدیریت مقالات و آموزش سلامت</h3>
+                <span class="panel-subtitle">ایجاد، ویرایش و حذف مقالات تخصصی، کتاب‌ها و اخبار</span>
+              </div>
+
+              <div class="panel-actions">
+                <div class="search-input-wrap">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                  <input type="text" id="articles-search" class="search-input" placeholder="جستجوی مقاله...">
+                </div>
+                <button class="btn btn-primary" onclick="openArticleModal()">
+                  <i class="fa-solid fa-plus"></i> مقاله جدید
+                </button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>تصویر</th>
+                    <th>عنوان مقاله</th>
+                    <th>دسته‌بندی</th>
+                    <th>تاریخ انتشار</th>
+                    <th>پیوست</th>
+                    <th>عملیات</th>
+                  </tr>
+                </thead>
+                <tbody id="articles-table-body">
+                  <!-- Dynamic Rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= TAB 3: REPORTS ================= -->
+        <section id="tab-reports" class="tab-content" style="display: none;">
+          <div class="panel-card">
+            <div class="panel-header">
+              <div class="panel-title-wrap">
+                <h3 class="panel-title">گزارش‌های عملکرد سالانه (اسناد PDF)</h3>
+                <span class="panel-subtitle">مدیریت فایل‌های PDF شفافیت مالی و گزارش‌های ادواری کانون</span>
+              </div>
+
+              <div class="panel-actions">
+                <button class="btn btn-primary" onclick="openReportModal()">
+                  <i class="fa-solid fa-file-arrow-up"></i> آپلود گزارش جدید
+                </button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>سال</th>
+                    <th>عنوان گزارش</th>
+                    <th>نام فایل / حجم</th>
+                    <th>توضیحات</th>
+                    <th>دانلود</th>
+                    <th>عملیات</th>
+                  </tr>
+                </thead>
+                <tbody id="reports-table-body">
+                  <!-- Dynamic Rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= TAB 4: VIDEOS ================= -->
+        <section id="tab-videos" class="tab-content" style="display: none;">
+          <div class="panel-card">
+            <div class="panel-header">
+              <div class="panel-title-wrap">
+                <h3 class="panel-title">رسانه و ویدیوهای آپارات</h3>
+                <span class="panel-subtitle">مستندها، مصاحبه‌های تلویزیونی و گالری تصویری</span>
+              </div>
+
+              <div class="panel-actions">
+                <button class="btn btn-primary" onclick="openVideoModal()">
+                  <i class="fa-solid fa-video"></i> افزودن ویدیوی جدید
+                </button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>کاور</th>
+                    <th>عنوان ویدیو</th>
+                    <th>کد آپارات</th>
+                    <th>تاریخ انتشار</th>
+                    <th>عملیات</th>
+                  </tr>
+                </thead>
+                <tbody id="videos-table-body">
+                  <!-- Dynamic Rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= TAB 5: BROCHURES & BOOKS ================= -->
+        <section id="tab-brochures" class="tab-content" style="display: none;">
+          <div class="panel-card">
+            <div class="panel-header">
+              <div class="panel-title-wrap">
+                <h3 class="panel-title">کتب مرجع و بروشورهای آموزشی</h3>
+                <span class="panel-subtitle">راهنماهای مراقبت تسکینی، فلوشیپ‌ها و بروشورهای پیشگیری سرطان</span>
+              </div>
+
+              <div class="panel-actions">
+                <button class="btn btn-primary" onclick="openBrochureModal()">
+                  <i class="fa-solid fa-plus"></i> افزودن بروشور / کتاب
+                </button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>نوع</th>
+                    <th>عنوان</th>
+                    <th>دسته‌بندی / مولف</th>
+                    <th>حجم فایل</th>
+                    <th>دانلود</th>
+                    <th>عملیات</th>
+                  </tr>
+                </thead>
+                <tbody id="brochures-table-body">
+                  <!-- Dynamic Rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= TAB 6: SETTINGS & STATS ================= -->
+        <section id="tab-settings" class="tab-content" style="display: none;">
+          <div class="panel-card">
+            <div class="panel-header">
+              <div class="panel-title-wrap">
+                <h3 class="panel-title">آمار صفحه اصلی و اطلاعات تماس سایت</h3>
+                <span class="panel-subtitle">ویرایش آمار نمایشی صفحه اول و مشخصات کانون</span>
+              </div>
+            </div>
+
+            <div style="padding: 24px;">
+              <form id="settings-form">
+                <h4 style="color: var(--primary-dark); font-weight: 800; margin-bottom: 16px;">
+                  <i class="fa-solid fa-chart-pie"></i> شمارنده‌های آمار صفحه اصلی
+                </h4>
+
+                <div class="form-grid" style="margin-bottom: 28px;">
+                  <div class="form-group">
+                    <label class="form-label">تعداد پرونده‌های بیماران سرطانی</label>
+                    <input type="text" id="stat-inp-patients" class="form-input" placeholder="مثال: +۵,۰۰۰">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">تعداد ویزیت‌های رایگان در منزل</label>
+                    <input type="text" id="stat-inp-visits" class="form-input" placeholder="مثال: +۱۲,۰۰۰">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">سال‌های خدمت‌رسانی</label>
+                    <input type="text" id="stat-inp-years" class="form-input" placeholder="مثال: ۱۰+">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">تعداد خادمان و داوطلبان</label>
+                    <input type="text" id="stat-inp-volunteers" class="form-input" placeholder="مثال: +۱۵۰">
+                  </div>
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid var(--border); margin-bottom: 24px;">
+
+                <h4 style="color: var(--primary-dark); font-weight: 800; margin-bottom: 16px;">
+                  <i class="fa-solid fa-address-book"></i> اطلاعات تماس کانون
+                </h4>
+
+                <div class="form-grid" style="margin-bottom: 28px;">
+                  <div class="form-group">
+                    <label class="form-label">تلفن تماس ۱</label>
+                    <input type="text" id="setting-phone1" class="form-input" placeholder="01732229007">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">تلفن تماس ۲</label>
+                    <input type="text" id="setting-phone2" class="form-input" placeholder="01732224414">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">ایمیل رسمی</label>
+                    <input type="email" id="setting-email" class="form-input" placeholder="info@hazini.ir">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">پیوند صفحه اینستاگرام</label>
+                    <input type="text" id="setting-instagram" class="form-input" placeholder="https://instagram.com/...">
+                  </div>
+                  <div class="form-group full">
+                    <label class="form-label">آدرس پستی کانون</label>
+                    <input type="text" id="setting-address" class="form-input">
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg">
+                  <i class="fa-solid fa-save"></i> ذخیره تغییرات آمار و تنظیمات
+                </button>
+              </form>
+
+              <hr style="border: 0; border-top: 1px solid var(--border); margin: 36px 0 24px;">
+
+              <h4 style="color: var(--danger); font-weight: 800; margin-bottom: 16px;">
+                <i class="fa-solid fa-lock"></i> تغییر رمز عبور پنل مدیریت
+              </h4>
+
+              <form id="change-pass-form" style="max-width: 500px;">
+                <div class="form-group" style="margin-bottom: 14px;">
+                  <label class="form-label">رمز عبور فعلی</label>
+                  <input type="password" id="cur-pass" class="form-input" required>
+                </div>
+                <div class="form-group" style="margin-bottom: 18px;">
+                  <label class="form-label">رمز عبور جدید</label>
+                  <input type="password" id="new-pass" class="form-input" minlength="4" required>
+                </div>
+                <button type="submit" class="btn btn-danger">
+                  <i class="fa-solid fa-key"></i> تغییر رمز عبور
+                </button>
+              </form>
+
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- 1. Submission Details Modal -->
+  <div id="modal-submission" class="admin-modal-overlay">
+    <div class="admin-modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="sub-modal-title"><i class="fa-solid fa-inbox"></i> جزئیات فرم ثبت‌شده</h3>
+        <button class="modal-close" onclick="closeAdminModal('modal-submission')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body" id="sub-modal-body">
+        <!-- Injected dynamically -->
+      </div>
+      <div class="modal-footer" id="sub-modal-footer">
+        <!-- Buttons injected dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Article Add/Edit Modal -->
+  <div id="modal-article" class="admin-modal-overlay">
+    <div class="admin-modal lg">
+      <div class="modal-header">
+        <h3 class="modal-title" id="article-modal-title"><i class="fa-solid fa-newspaper"></i> افزودن مقاله جدید</h3>
+        <button class="modal-close" onclick="closeAdminModal('modal-article')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="article-form">
+        <input type="hidden" id="art-id">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label class="form-label">عنوان کامل مقاله *</label>
+              <input type="text" id="art-title" class="form-input" required placeholder="مثال: طب تسکینی و کنترل علائم در منزل">
+            </div>
+            <div class="form-group">
+              <label class="form-label">دسته‌بندی موضوعی *</label>
+              <select id="art-category" class="form-select" required>
+                <option value="طب تسکینی">طب تسکینی</option>
+                <option value="مراقبت در منزل">مراقبت در منزل</option>
+                <option value="مقالات و آموزش سلامت">مقالات و سلامت</option>
+                <option value="همایش‌ها و تصاویر">همایش‌ها و تصاویر</option>
+                <option value="نیکوکاری و همیاری">نیکوکاری</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">تاریخ انتشار (شمسی)</label>
+              <input type="text" id="art-date" class="form-input" placeholder="مثال: شهریور ۱۴۰۳">
+            </div>
+            <div class="form-group full">
+              <label class="form-label">خلاصه کوتاه مقاله (جهت نمایش در کارت‌ها) *</label>
+              <textarea id="art-summary" class="form-textarea" style="min-height: 70px;" required placeholder="خلاصه‌ای از مباحث مقاله..."></textarea>
+            </div>
+            <div class="form-group full">
+              <label class="form-label">متن کامل مقاله</label>
+              <textarea id="art-content" class="form-textarea" style="min-height: 140px;" placeholder="متن کامل، پاراگراف‌ها و توضیحات..."></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">تصویر شاخص مقاله</label>
+              <input type="file" id="art-image-file" class="form-input" accept="image/*">
+            </div>
+            <div class="form-group">
+              <label class="form-label">شناسه ویدیوی آپارات (اختیاری)</label>
+              <input type="text" id="art-aparat" class="form-input" placeholder="مثال: n1PT5">
+            </div>
+            <div class="form-group full">
+              <label class="form-label">پیوست فایل PDF (اختیاری)</label>
+              <input type="file" id="art-pdf-file" class="form-input" accept=".pdf">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeAdminModal('modal-article')">انصراف</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> ذخیره مقاله</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. Report Modal -->
+  <div id="modal-report" class="admin-modal-overlay">
+    <div class="admin-modal">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fa-solid fa-file-pdf"></i> افزودن گزارش عملکرد سالانه</h3>
+        <button class="modal-close" onclick="closeAdminModal('modal-report')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="report-form">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label class="form-label">عنوان گزارش *</label>
+              <input type="text" id="rep-title" class="form-input" required placeholder="مثال: گزارش عملکرد کانون در سال ۱۴۰۲">
+            </div>
+            <div class="form-group">
+              <label class="form-label">سال گزارش *</label>
+              <input type="text" id="rep-year" class="form-input" required placeholder="مثال: ۱۴۰۲">
+            </div>
+            <div class="form-group">
+              <label class="form-label">نوع گزارش</label>
+              <select id="rep-type" class="form-select">
+                <option value="سالیانه">سالیانه</option>
+                <option value="شش ماهه">شش ماهه</option>
+                <option value="ویژه">گزارش ویژه</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label class="form-label">توضیحات و خلاصه دستاوردها</label>
+              <textarea id="rep-desc" class="form-textarea" placeholder="خلاصه آمار خدمات، پذیرش بیماران و تجهیزات..."></textarea>
+            </div>
+            <div class="form-group full">
+              <label class="form-label">فایل PDF گزارش رسمی *</label>
+              <input type="file" id="rep-file" class="form-input" accept=".pdf" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeAdminModal('modal-report')">انصراف</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-upload"></i> آپلود گزارش</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. Video Modal -->
+  <div id="modal-video" class="admin-modal-overlay">
+    <div class="admin-modal">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fa-solid fa-video"></i> افزودن ویدیو و مستند</h3>
+        <button class="modal-close" onclick="closeAdminModal('modal-video')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="video-form">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label class="form-label">عنوان ویدیو *</label>
+              <input type="text" id="vid-title" class="form-input" required placeholder="مثال: مستند دکتر حزینی در شبکه یک">
+            </div>
+            <div class="form-group full">
+              <label class="form-label">زیرعنوان / توضیحات</label>
+              <input type="text" id="vid-subtitle" class="form-input" placeholder="توضیح کوتاه درباره موضوع ویدیو">
+            </div>
+            <div class="form-group">
+              <label class="form-label">شناسه ویدیو در آپارات (Aparat ID) *</label>
+              <input type="text" id="vid-aparat" class="form-input" required placeholder="مثال: n1PT5 یا 9ZUpE">
+            </div>
+            <div class="form-group">
+              <label class="form-label">تاریخ انتشار</label>
+              <input type="text" id="vid-date" class="form-input" placeholder="مثال: تیر ۱۴۰۳">
+            </div>
+            <div class="form-group full">
+              <label class="form-label">تصویر کاور ویدیو (Thumbnail)</label>
+              <input type="file" id="vid-thumb-file" class="form-input" accept="image/*">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeAdminModal('modal-video')">انصراف</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> افزودن ویدیو</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. Brochure / Book Modal -->
+  <div id="modal-brochure" class="admin-modal-overlay">
+    <div class="admin-modal">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fa-solid fa-book-medical"></i> افزودن بروشور یا کتاب مرجع</h3>
+        <button class="modal-close" onclick="closeAdminModal('modal-brochure')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="brochure-form">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">نوع سند *</label>
+              <select id="doc-type-select" class="form-select" required>
+                <option value="brochure">بروشور راهنمای سلامت (DOCX / PDF)</option>
+                <option value="book">کتابچه و مرجع علمی (PDF)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">دسته‌بندی موضوعی</label>
+              <input type="text" id="doc-category" class="form-input" placeholder="مثال: پیشگیری و غربالگری">
+            </div>
+            <div class="form-group full">
+              <label class="form-label">عنوان سند *</label>
+              <input type="text" id="doc-title" class="form-input" required placeholder="عنوان کامل کتابچه یا بروشور">
+            </div>
+            <div class="form-group full">
+              <label class="form-label">نویسنده / سازمان منتشرکننده</label>
+              <input type="text" id="doc-author" class="form-input" placeholder="مثال: سازمان بهداشت جهانی (WHO) / دکتر حزینی">
+            </div>
+            <div class="form-group full">
+              <label class="form-label">توضیحات خلاصه</label>
+              <textarea id="doc-desc" class="form-textarea" placeholder="توضیحات و سرفصل‌های اصلی فایل..."></textarea>
+            </div>
+            <div class="form-group full">
+              <label class="form-label">انتخاب فایل (PDF یا Word) *</label>
+              <input type="file" id="doc-file" class="form-input" accept=".pdf,.doc,.docx" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeAdminModal('modal-brochure')">انصراف</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-upload"></i> بارگذاری فایل</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 6. Export Data Modal -->
+  <div id="modal-export" class="admin-modal-overlay">
+    <div class="admin-modal lg">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fa-solid fa-file-export"></i> دریافت خروجی دیتابیس (GitHub Sync)</h3>
+        <button class="modal-close" onclick="closeAdminModal('modal-export')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px;">
+          اگر سایت را روی <strong>GitHub Pages</strong> دیپلوی کرده‌اید، می‌توانید با کلیک روی دکمه‌های زیر، فایل داده‌های به‌روزشده را دانلود نموده و در مخزن گیت‌هاب جایگزین کنید:
+        </p>
+        <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+          <button class="btn btn-primary" onclick="downloadExportFile('data.js')">
+            <i class="fa-solid fa-download"></i> دانلود فایل assets/js/data.js
+          </button>
+          <button class="btn btn-outline" onclick="downloadExportFile('db.json')">
+            <i class="fa-solid fa-download"></i> دانلود فایل data/db.json
+          </button>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">پیش‌نمایش کدهای داده (JSON)</label>
+          <textarea id="export-json-preview" class="form-textarea" style="min-height: 200px; font-family: monospace; direction: ltr; font-size: 0.8rem;" readonly></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeAdminModal('modal-export')">بستن</button>
+        <button class="btn btn-primary" onclick="copyExportToClipboard()"><i class="fa-solid fa-copy"></i> کپی کردن در کلیپ‌بورد</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../assets/js/data.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

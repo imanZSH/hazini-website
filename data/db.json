@@ -1,8 +1,4 @@
-/**
- * Data store for Dr. Hazini and Mehr Golestan Cancer Support Association
- * Auto-synced from Admin Panel Database
- */
-window.SITE_DATA = {
+{
   "meta": {
     "siteName": "دکتر عبدالرحیم حزینی | کانون مهر گلستان",
     "tagline": "پیشگام طب تسکینی و حامی بیماران سرطانی و صعب‌العلاج استان گلستان",
@@ -1265,5 +1261,9 @@ window.SITE_DATA = {
       "message": "با سلام، جهت دریافت وقت مشاوره تخصصی حضوری با جناب دکتر حزینی لطفا راهنمایی فرمایید.",
       "status": "read"
     }
-  ]
-};
+  ],
+  "adminConfig": {
+    "password": "admin",
+    "lastLogin": "2026-08-21T19:07:35.755Z"
+  }
+}

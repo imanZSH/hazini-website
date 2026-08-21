@@ -105,35 +105,35 @@
             <div class="form-grid">
               <div class="form-group">
                 <label class="form-label">نام و نام خانوادگی سفارش‌دهنده *</label>
-                <input type="text" class="form-control" placeholder="مثال: دکتر محمدی / شرکت ..." required>
+                <input type="text" name="ordererName" class="form-control" placeholder="مثال: دکتر محمدی / شرکت ..." required>
               </div>
               <div class="form-group">
                 <label class="form-label">شماره تلفن همراه *</label>
-                <input type="tel" class="form-control" placeholder="مثال: 0911xxxxxxx" required>
+                <input type="tel" name="phone" class="form-control" placeholder="مثال: 0911xxxxxxx" required>
               </div>
               <div class="form-group">
                 <label class="form-label">نام مرحوم / مرحومه مغفوره *</label>
-                <input type="text" class="form-control" placeholder="نام متوفی گرامی" required>
+                <input type="text" name="deceasedName" class="form-control" placeholder="نام متوفی گرامی" required>
               </div>
               <div class="form-group">
                 <label class="form-label">نام خاندان / بازماندگان معزا *</label>
-                <input type="text" class="form-control" placeholder="خاندان محترم ..." required>
+                <input type="text" name="familyName" class="form-control" placeholder="خاندان محترم ..." required>
               </div>
               <div class="form-group full-width">
                 <label class="form-label">محل و آدرس برگزاری مراسم *</label>
-                <input type="text" class="form-control" placeholder="نام مسجد، حسینیه یا آرامستان در استان گلستان" required>
+                <input type="text" name="location" class="form-control" placeholder="نام مسجد، حسینیه یا آرامستان در استان گلستان" required>
               </div>
               <div class="form-group">
                 <label class="form-label">تاریخ برگزاری مراسم *</label>
-                <input type="text" class="form-control" placeholder="مثال: پنج‌شنبه ۱۴۰۳/..." required>
+                <input type="text" name="ceremonyDate" class="form-control" placeholder="مثال: پنج‌شنبه ۱۴۰۳/..." required>
               </div>
               <div class="form-group">
                 <label class="form-label">ساعت برگزاری مراسم *</label>
-                <input type="text" class="form-control" placeholder="مثال: از ساعت ۱۵ الی ۱۷" required>
+                <input type="text" name="ceremonyTime" class="form-control" placeholder="مثال: از ساعت ۱۵ الی ۱۷" required>
               </div>
               <div class="form-group full-width">
                 <label class="form-label">نوع طرح استند</label>
-                <select class="form-control">
+                <select name="bannerType" class="form-control">
                   <option value="standing-single">استند ایستاده تک (طرح اختصاصی تسلیت)</option>
                   <option value="standing-double">استند دوقلو ویژه</option>
                   <option value="digital-card">لوح تسلیت و بنر دیجیتال</option>
@@ -163,19 +163,19 @@
           <div class="form-grid">
             <div class="form-group">
               <label class="form-label">نام و نام خانوادگی *</label>
-              <input type="text" class="form-control" placeholder="نام کامل" required>
+              <input type="text" name="name" class="form-control" placeholder="نام کامل" required>
             </div>
             <div class="form-group">
               <label class="form-label">شماره تماس در دسترس *</label>
-              <input type="tel" class="form-control" placeholder="0911xxxxxxx" required>
+              <input type="tel" name="phone" class="form-control" placeholder="0911xxxxxxx" required>
             </div>
             <div class="form-group">
               <label class="form-label">شغل و رشته تحصیلی / تخصص *</label>
-              <input type="text" class="form-control" placeholder="پزشک، پرستار، روانشناس، دانشجو، ..." required>
+              <input type="text" name="job" class="form-control" placeholder="پزشک، پرستار، روانشناس، دانشجو، ..." required>
             </div>
             <div class="form-group">
               <label class="form-label">حوزه تمایل به همکاری *</label>
-              <select class="form-control" required>
+              <select name="field" class="form-control" required>
                 <option value="">انتخاب نمایید...</option>
                 <option value="medical">خدمات پزشکی و ویزیت در منزل</option>
                 <option value="nursing">پرستاری تسکینی و پانسمان</option>
@@ -187,7 +187,7 @@
             </div>
             <div class="form-group full-width">
               <label class="form-label">توضیحات و میزان زمان در دسترس در هفته</label>
-              <textarea class="form-control" placeholder="سابقه فعالیت‌های داوطلبانه و روزها یا ساعاتی که امکان همکاری دارید..."></textarea>
+              <textarea name="details" class="form-control" placeholder="سابقه فعالیت‌های داوطلبانه و روزها یا ساعاتی که امکان همکاری دارید..."></textarea>
             </div>
           </div>
           <div style="text-align: center; margin-top: 10px;">

@@ -165,19 +165,19 @@
           <div class="form-grid">
             <div class="form-group">
               <label class="form-label">نام و نام خانوادگی بیمار *</label>
-              <input type="text" class="form-control" placeholder="مثال: علی رضایی" required>
+              <input type="text" name="patientName" class="form-control" placeholder="مثال: علی رضایی" required>
             </div>
             <div class="form-group">
               <label class="form-label">شماره تماس در دسترس *</label>
-              <input type="tel" class="form-control" placeholder="مثال: 0911xxxxxxx" required>
+              <input type="tel" name="phone" class="form-control" placeholder="مثال: 0911xxxxxxx" required>
             </div>
             <div class="form-group">
               <label class="form-label">نوع بیماری / تشخیص پزشکی *</label>
-              <input type="text" class="form-control" placeholder="مثال: سرطان معده، ریه، ..." required>
+              <input type="text" name="disease" class="form-control" placeholder="مثال: سرطان معده، ریه، ..." required>
             </div>
             <div class="form-group">
               <label class="form-label">نوع خدمات مورد نیاز *</label>
-              <select class="form-control" required>
+              <select name="serviceType" class="form-control" required>
                 <option value="">انتخاب نمایید...</option>
                 <option value="home-care">ویزیت و مراقبت در منزل</option>
                 <option value="equipment">امانت تجهیزات پزشکی (تخت، اکسیژن و ...)</option>
@@ -188,11 +188,11 @@
             </div>
             <div class="form-group full-width">
               <label class="form-label">آدرس محل سکونت بیمار (استان گلستان) *</label>
-              <input type="text" class="form-control" placeholder="شهر، خیابان، کوچه، پلاک" required>
+              <input type="text" name="address" class="form-control" placeholder="شهر، خیابان، کوچه، پلاک" required>
             </div>
             <div class="form-group full-width">
               <label class="form-label">توضیحات تکمیلی و وضعیت فعلی بیمار</label>
-              <textarea class="form-control" placeholder="توضیحاتی در خصوص وضعیت حرکتی بیمار، تجهیزات مورد نیاز و سابقه درمانی..."></textarea>
+              <textarea name="notes" class="form-control" placeholder="توضیحاتی در خصوص وضعیت حرکتی بیمار، تجهیزات مورد نیاز و سابقه درمانی..."></textarea>
             </div>
           </div>
           <div style="text-align: center; margin-top: 10px;">
