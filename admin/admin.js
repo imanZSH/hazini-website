@@ -208,9 +208,6 @@ function initNavigation() {
     }
   });
 
-  // Export Data Button
-  document.getElementById('export-data-btn').addEventListener('click', openExportModal);
-
   // Quick Add Button
   document.getElementById('quick-add-btn').addEventListener('click', () => {
     if (currentTab === 'articles') openArticleModal();

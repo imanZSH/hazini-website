@@ -72,9 +72,6 @@
           <i class="fa-solid fa-globe"></i>
           <span>مشاهده وب‌سایت اصلی</span>
         </a>
-        <button id="export-data-btn" class="btn btn-outline btn-sm" style="color: #CBD5E1; border-color: rgba(255,255,255,0.15); width: 100%;">
-          <i class="fa-solid fa-file-export"></i> خروجی دیتابیس (GitHub)
-        </button>
         <button id="logout-btn" class="btn btn-danger btn-sm" style="width: 100%;">
           <i class="fa-solid fa-right-from-bracket"></i> خروج از پنل
         </button>
@@ -94,9 +91,6 @@
         </div>
 
         <div class="topbar-actions">
-          <span id="env-badge" class="mode-badge server">
-            <i class="fa-solid fa-server"></i> <span id="env-text">سرور متصل است</span>
-          </span>
           <button id="quick-add-btn" class="btn btn-primary btn-sm">
             <i class="fa-solid fa-plus"></i> <span id="quick-add-text">افزودن محتوا</span>
           </button>
@@ -639,37 +633,6 @@
           <button type="submit" class="btn btn-primary"><i class="fa-solid fa-upload"></i> بارگذاری فایل</button>
         </div>
       </form>
-    </div>
-  </div>
-
-  <!-- 6. Export Data Modal -->
-  <div id="modal-export" class="admin-modal-overlay">
-    <div class="admin-modal lg">
-      <div class="modal-header">
-        <h3 class="modal-title"><i class="fa-solid fa-file-export"></i> دریافت خروجی دیتابیس (GitHub Sync)</h3>
-        <button class="modal-close" onclick="closeAdminModal('modal-export')"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="modal-body">
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px;">
-          اگر سایت را روی <strong>GitHub Pages</strong> دیپلوی کرده‌اید، می‌توانید با کلیک روی دکمه‌های زیر، فایل داده‌های به‌روزشده را دانلود نموده و در مخزن گیت‌هاب جایگزین کنید:
-        </p>
-        <div style="display: flex; gap: 12px; margin-bottom: 20px;">
-          <button class="btn btn-primary" onclick="downloadExportFile('data.js')">
-            <i class="fa-solid fa-download"></i> دانلود فایل assets/js/data.js
-          </button>
-          <button class="btn btn-outline" onclick="downloadExportFile('db.json')">
-            <i class="fa-solid fa-download"></i> دانلود فایل data/db.json
-          </button>
-        </div>
-        <div class="form-group full">
-          <label class="form-label">پیش‌نمایش کدهای داده (JSON)</label>
-          <textarea id="export-json-preview" class="form-textarea" style="min-height: 200px; font-family: monospace; direction: ltr; font-size: 0.8rem;" readonly></textarea>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeAdminModal('modal-export')">بستن</button>
-        <button class="btn btn-primary" onclick="copyExportToClipboard()"><i class="fa-solid fa-copy"></i> کپی کردن در کلیپ‌بورد</button>
-      </div>
     </div>
   </div>
 
