@@ -61,35 +61,37 @@ function showToast(message, type = 'success') {
 async function initAppData() {
   const envBadge = document.getElementById('env-badge');
   const envText = document.getElementById('env-text');
+  const isLocalHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
-  try {
-    // 1. Try to fetch from Live Server API
-    const res = await fetch('/api/submissions', {
-      headers: { 'Authorization': `Bearer ${authToken}` }
-    });
+  if (isLocalHost) {
+    try {
+      // 1. Try to fetch from Live Server API
+      const res = await fetch('/api/submissions', {
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
 
-    const contentType = res.headers.get('content-type') || '';
-    if (res.ok && contentType.includes('application/json')) {
-      IS_SERVER_MODE = true;
-      const submissions = await res.json();
-      
-      const dataRes = await fetch('/api/data');
-      const fullData = await dataRes.json();
-      
-      appData = {
-        ...fullData,
-        submissions: submissions || []
-      };
+      const contentType = res.headers.get('content-type') || '';
+      if (res.ok && contentType.includes('application/json')) {
+        IS_SERVER_MODE = true;
+        const submissions = await res.json();
+        
+        const dataRes = await fetch('/api/data');
+        const fullData = await dataRes.json();
+        
+        appData = {
+          ...fullData,
+          submissions: submissions || []
+        };
 
-      if (envBadge) {
-        envBadge.className = 'mode-badge server';
-        envText.innerHTML = '<i class="fa-solid fa-cloud-check"></i> سرور متصل است (Live API)';
+        if (envBadge) {
+          envBadge.className = 'mode-badge server';
+          envText.innerHTML = '<i class="fa-solid fa-cloud-check"></i> سرور متصل است (Live API)';
+        }
+        return;
       }
-      return;
+    } catch (err) {
+      console.log('Server API not accessible. Running in Static mode.');
     }
-  } catch (err) {
-    // Fallback to Static GitHub Pages Mode
-    console.log('Server API not accessible. Running in Static GitHub Pages mode.');
   }
 
   // 2. Static / GitHub Pages Mode

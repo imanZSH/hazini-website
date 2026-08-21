@@ -71,11 +71,25 @@
       }
     });
 
-    // Form Submission (Hybrid Adapter: Try Server API, fallback to client-side localStorage check for GitHub Pages)
+    // Form Submission
     const loginForm = document.getElementById('login-form');
     const errorBox = document.getElementById('login-error');
     const errorText = document.getElementById('error-text');
     const submitBtn = document.getElementById('submit-btn');
+
+    function showError(msg) {
+      errorText.textContent = msg;
+      errorBox.style.display = 'block';
+    }
+
+    function setAuthAndRedirect(token, remember) {
+      if (remember) {
+        localStorage.setItem('hazini_admin_token', token);
+      } else {
+        sessionStorage.setItem('hazini_admin_token', token);
+      }
+      window.location.href = 'index.html';
+    }
 
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -85,63 +99,55 @@
 
       const password = passInput.value.trim();
       const remember = document.getElementById('remember-me').checked;
+      const isLocalHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
       try {
-        // 1. Try Server API first (when running on Express backend)
-        const res = await fetch('/api/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password })
-        });
+        // If running locally with Node.js backend
+        if (isLocalHost) {
+          try {
+            const res = await fetch('/api/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ password })
+            });
 
-        const contentType = res.headers.get('content-type') || '';
-        if (contentType.includes('application/json')) {
-          if (res.ok) {
-            const data = await res.json();
-            const token = data.token || ('admin_session_' + password);
-            if (remember) {
-              localStorage.setItem('hazini_admin_token', token);
-            } else {
-              sessionStorage.setItem('hazini_admin_token', token);
+            const contentType = res.headers.get('content-type') || '';
+            if (contentType.includes('application/json')) {
+              if (res.ok) {
+                const data = await res.json();
+                setAuthAndRedirect(data.token || ('admin_session_' + password), remember);
+                return;
+              } else if (res.status === 401) {
+                const errData = await res.json().catch(() => ({}));
+                showError(errData.message || 'رمز عبور اشتباه است.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> ورود به داشبورد مدیریت';
+                return;
+              }
             }
-            window.location.href = 'index.html';
-            return;
-          } else if (res.status === 401) {
-            const errData = await res.json().catch(() => ({}));
-            showError(errData.message || 'رمز عبور اشتباه است.');
-            return;
+          } catch (netErr) {
+            console.log('Local backend unreachable, trying local credentials...');
           }
         }
-      } catch (networkErr) {
-        // Network error / server offline
-      }
 
-      // 2. Static hosting fallback (GitHub Pages)
-      console.log('Server not reachable or running in static mode (GitHub Pages compatible).');
-      const customPass = localStorage.getItem('hazini_custom_admin_password') || 'admin';
-      
-      if (password === customPass || password === 'admin') {
-        const token = 'admin_session_' + password;
-        if (remember) {
-          localStorage.setItem('hazini_admin_token', token);
+        // Static mode (GitHub Pages) or fallback
+        const customPass = localStorage.getItem('hazini_custom_admin_password') || 'admin';
+        if (password === customPass || password === 'admin') {
+          const token = 'admin_session_' + Date.now();
+          setAuthAndRedirect(token, remember);
+          return;
         } else {
-          sessionStorage.setItem('hazini_admin_token', token);
+          showError('رمز عبور اشتباه است.');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> ورود به داشبورد مدیریت';
         }
-        window.location.href = 'index.html';
-        return;
-      } else {
-        showError('رمز عبور اشتباه است.');
+      } catch (err) {
+        console.error('Login error:', err);
+        showError('خطا در فرآیند ورود. لطفاً دوباره تلاش کنید.');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> ورود به داشبورد مدیریت';
       }
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> ورود به داشبورد مدیریت';
-    }
-  });
-
-    function showError(msg) {
-      errorText.textContent = msg;
-      errorBox.style.display = 'block';
-    }
+    });
   </script>
 </body>
 </html>
