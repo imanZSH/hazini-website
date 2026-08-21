@@ -101,27 +101,45 @@ async function initAppData() {
     envText.innerHTML = '<i class="fa-brands fa-github"></i> حالت آنلاین (GitHub Pages)';
   }
 
-  // Load from localStorage or window.SITE_DATA
+  // Base data from window.SITE_DATA (articles, reports, videos, brochures, meta stats)
+  const base = (typeof window !== 'undefined' && window.SITE_DATA) ? JSON.parse(JSON.stringify(window.SITE_DATA)) : {};
+
+  // Check localStorage for any local user edits
+  let localData = null;
   const localSaved = localStorage.getItem('hazini_site_data');
   if (localSaved) {
     try {
-      appData = JSON.parse(localSaved);
+      localData = JSON.parse(localSaved);
     } catch (e) {
-      appData = window.SITE_DATA || {};
+      localData = null;
     }
-  } else {
-    appData = window.SITE_DATA ? JSON.parse(JSON.stringify(window.SITE_DATA)) : {};
   }
+
+  appData = {
+    meta: Object.assign({}, base.meta || {}, localData?.meta || {}),
+    services: (localData?.services && localData.services.length > 0) ? localData.services : (base.services || []),
+    pdfBooks: (localData?.pdfBooks && localData.pdfBooks.length > 0) ? localData.pdfBooks : (base.pdfBooks || []),
+    videos: (localData?.videos && localData.videos.length > 0) ? localData.videos : (base.videos || []),
+    reports: (localData?.reports && localData.reports.length > 0) ? localData.reports : (base.reports || []),
+    articles: (localData?.articles && localData.articles.length > 0) ? localData.articles : (base.articles || []),
+    brochures: (localData?.brochures && localData.brochures.length > 0) ? localData.brochures : (base.brochures || []),
+    submissions: (localData?.submissions && localData.submissions.length > 0) ? localData.submissions : (base.submissions || [])
+  };
 
   // Check submissions in local storage
   const localSubs = localStorage.getItem('hazini_submissions');
   if (localSubs) {
     try {
-      appData.submissions = JSON.parse(localSubs);
+      const parsedSubs = JSON.parse(localSubs);
+      if (Array.isArray(parsedSubs) && parsedSubs.length > 0) {
+        appData.submissions = parsedSubs;
+      }
     } catch (e) {}
-  } else if (!appData.submissions || appData.submissions.length === 0) {
-    // Sample initial submissions for demo on GitHub Pages
-    appData.submissions = [
+  }
+
+  // Fallback initial sample submissions if none
+  if (!appData.submissions || appData.submissions.length === 0) {
+    appData.submissions = base.submissions || [
       {
         id: 1,
         type: 'service',
@@ -150,11 +168,11 @@ async function initAppData() {
         ceremonyTime: '۱۶:۰۰ الی ۱۸:۰۰',
         bannerType: 'standing-single',
         bannerTypeTitle: 'استند ایستاده تک',
+        donorName: 'از طرف پرسنل شرکت مهندسی پایا',
         status: 'unread'
       },
       {
         id: 3,
-        type: 'volunteer',
         typeTitle: 'ثبت‌نام داوطلب',
         date: '۱۴۰۳/۰۵/۲۵ - ۱۱:۱۵',
         name: 'دکتر فاطمه محمدی',
@@ -206,15 +224,6 @@ function initNavigation() {
       sessionStorage.removeItem('hazini_admin_token');
       window.location.href = 'login.html';
     }
-  });
-
-  // Quick Add Button
-  document.getElementById('quick-add-btn').addEventListener('click', () => {
-    if (currentTab === 'articles') openArticleModal();
-    else if (currentTab === 'reports') openReportModal();
-    else if (currentTab === 'videos') openVideoModal();
-    else if (currentTab === 'brochures') openBrochureModal();
-    else openArticleModal();
   });
 }
 
