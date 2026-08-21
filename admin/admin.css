@@ -533,6 +533,11 @@ body {
   background: #F8FAFC;
 }
 
+.admin-table tbody tr:has(td[colspan]):hover,
+.admin-table tbody tr.empty-row:hover {
+  background: transparent !important;
+}
+
 .admin-table tbody tr.unread-row {
   background: #F0FDF4;
   font-weight: 600;

@@ -186,13 +186,37 @@ async function initAppData() {
         status: 'read'
       }
     ];
-    saveLocalData();
   }
+
+  // Check users (Default admin user if none)
+  const defaultUsers = [
+    { id: 1, username: 'admin', name: 'مدیر اصلی سیستم', role: 'مدیر کل', password: 'admin', createdAt: '۱۴۰۳/۰۱/۰۱' }
+  ];
+
+  const localUsers = localStorage.getItem('hazini_admin_users');
+  if (localUsers) {
+    try {
+      const parsedUsers = JSON.parse(localUsers);
+      if (Array.isArray(parsedUsers) && parsedUsers.length > 0) {
+        appData.users = parsedUsers;
+      } else {
+        appData.users = defaultUsers;
+      }
+    } catch(e) {
+      appData.users = defaultUsers;
+    }
+  } else {
+    appData.users = defaultUsers;
+    localStorage.setItem('hazini_admin_users', JSON.stringify(defaultUsers));
+  }
+
+  saveLocalData();
 }
 
 function saveLocalData() {
   localStorage.setItem('hazini_site_data', JSON.stringify(appData));
   localStorage.setItem('hazini_submissions', JSON.stringify(appData.submissions || []));
+  localStorage.setItem('hazini_admin_users', JSON.stringify(appData.users || []));
 }
 
 // ----------------------------------------------------
