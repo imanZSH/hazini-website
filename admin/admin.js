@@ -1157,16 +1157,38 @@ document.getElementById('settings-form').addEventListener('submit', async (e) =>
 });
 
 // ====================================================
-// 7. USER MANAGEMENT MODULE
+// 7. USER MANAGEMENT & PROFILE MODULE
 // ====================================================
+function getCurrentUser() {
+  const saved = localStorage.getItem('hazini_current_user') || sessionStorage.getItem('hazini_current_user');
+  if (saved) {
+    try { return JSON.parse(saved); } catch(e) {}
+  }
+  return { id: 1, username: 'admin', name: 'مدیر اصلی سیستم', role: 'مدیر کل' };
+}
+
+function updateCurrentUserDisplay() {
+  const currentUser = getCurrentUser();
+  const nameEl = document.getElementById('topbar-user-name');
+  const roleEl = document.getElementById('topbar-user-role');
+  const avatarEl = document.getElementById('topbar-avatar');
+  const myPassUsername = document.getElementById('my-pass-username');
+
+  if (nameEl) nameEl.textContent = currentUser.name || currentUser.username;
+  if (roleEl) roleEl.textContent = `@${currentUser.username} (${currentUser.role || 'مدیر'})`;
+  if (avatarEl) avatarEl.textContent = (currentUser.name || currentUser.username).charAt(0);
+  if (myPassUsername) myPassUsername.value = `@${currentUser.username} - ${currentUser.name || currentUser.username} (${currentUser.role || 'مدیر کل'})`;
+}
+
 function renderUsers() {
+  updateCurrentUserDisplay();
   const tbody = document.getElementById('users-table-body');
   if (!tbody) return;
 
   const users = appData.users || [];
   if (users.length === 0) {
     tbody.innerHTML = `
-      <tr>
+      <tr class="empty-row">
         <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-muted);">
           <i class="fa-solid fa-users" style="font-size: 2.5rem; color: #CBD5E1; margin-bottom: 12px; display: block;"></i>
           کاربری در سیستم یافت نشد.
@@ -1280,7 +1302,7 @@ document.getElementById('user-form').addEventListener('submit', async (e) => {
   const password = document.getElementById('user-password').value.trim();
   const confirmPassword = document.getElementById('user-confirm-password').value.trim();
 
-  if (password && password !== confirmPassword) {
+  if (password && confirmPassword && password !== confirmPassword) {
     alert('رمز عبور و تکرار آن یکسان نیستند.');
     return;
   }
@@ -1308,12 +1330,20 @@ document.getElementById('user-form').addEventListener('submit', async (e) => {
     user.role = role;
     if (password) user.password = password;
 
+    // If current logged-in user edited own info
+    const currentUser = getCurrentUser();
+    if (currentUser.id === user.id || currentUser.username.toLowerCase() === user.username.toLowerCase()) {
+      const updatedCurrent = { ...currentUser, name: user.name, role: user.role };
+      localStorage.setItem('hazini_current_user', JSON.stringify(updatedCurrent));
+      sessionStorage.setItem('hazini_current_user', JSON.stringify(updatedCurrent));
+    }
+
     showToast('اطلاعات کاربر با موفقیت ویرایش شد.', 'success');
   } else {
     // Check if username duplicate
     const exists = (appData.users || []).some(u => u.username.toLowerCase() === username.toLowerCase());
     if (exists) {
-      alert('این نام کاربری از قبل ثبت شده است.');
+      alert('این نام کاربری از قبل ثبت شده است. لطفاً نام کاربری دیگری انتخاب فرمایید.');
       return;
     }
 
@@ -1354,6 +1384,59 @@ document.getElementById('user-form').addEventListener('submit', async (e) => {
   renderUsers();
   closeAdminModal('modal-user');
 });
+
+// Change My Password Form Submit
+const changeMyPassForm = document.getElementById('change-my-pass-form');
+if (changeMyPassForm) {
+  changeMyPassForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const curPass = document.getElementById('my-cur-pass').value.trim();
+    const newPass = document.getElementById('my-new-pass').value.trim();
+    const confirmPass = document.getElementById('my-confirm-pass').value.trim();
+
+    if (newPass !== confirmPass) {
+      alert('رمز عبور جدید و تکرار آن یکسان نیستند.');
+      return;
+    }
+
+    if (newPass.length < 4) {
+      alert('رمز عبور جدید باید حداقل ۴ کاراکتر باشد.');
+      return;
+    }
+
+    const currentUser = getCurrentUser();
+    const targetUser = (appData.users || []).find(u => u.username.toLowerCase() === currentUser.username.toLowerCase());
+
+    if (!targetUser) {
+      alert('کاربر جاری یافت نشد.');
+      return;
+    }
+
+    if (targetUser.password && targetUser.password !== curPass) {
+      alert('رمز عبور فعلی وارد شده نادرست است.');
+      return;
+    }
+
+    if (IS_SERVER_MODE) {
+      try {
+        await fetch(`/api/users/${targetUser.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: JSON.stringify({ password: newPass })
+        });
+      } catch (err) {}
+    }
+
+    targetUser.password = newPass;
+    saveLocalData();
+    changeMyPassForm.reset();
+    updateCurrentUserDisplay();
+    showToast('رمز عبور حساب کاربری شما با موفقیت به‌روزرسانی شد.', 'success');
+  });
+}
 
 async function deleteUser(userId) {
   const user = (appData.users || []).find(u => u.id === userId);
