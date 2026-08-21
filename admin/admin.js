@@ -17,7 +17,8 @@ let appData = {
   reports: [],
   articles: [],
   brochures: [],
-  submissions: []
+  submissions: [],
+  users: []
 };
 
 // Check Authentication
@@ -123,7 +124,8 @@ async function initAppData() {
     reports: (localData?.reports && localData.reports.length > 0) ? localData.reports : (base.reports || []),
     articles: (localData?.articles && localData.articles.length > 0) ? localData.articles : (base.articles || []),
     brochures: (localData?.brochures && localData.brochures.length > 0) ? localData.brochures : (base.brochures || []),
-    submissions: (localData?.submissions && localData.submissions.length > 0) ? localData.submissions : (base.submissions || [])
+    submissions: (localData?.submissions && localData.submissions.length > 0) ? localData.submissions : (base.submissions || []),
+    users: []
   };
 
   // Check submissions in local storage
@@ -173,23 +175,11 @@ async function initAppData() {
       },
       {
         id: 3,
-        typeTitle: 'ثبت‌نام داوطلب',
-        date: '۱۴۰۳/۰۵/۲۵ - ۱۱:۱۵',
-        name: 'دکتر فاطمه محمدی',
-        phone: '09111700000',
-        job: 'پزشک عمومی',
-        field: 'medical',
-        fieldTitle: 'خدمات پزشکی و ویزیت در منزل',
-        details: 'امکان اختصاص عصر روزهای پنج‌شنبه برای ویزیت بیماران در منزل.',
-        status: 'read'
-      },
-      {
-        id: 4,
         type: 'contact',
-        typeTitle: 'تماس با ما',
-        date: '۱۴۰۳/۰۵/۲۲ - ۰۹:۲۰',
-        name: 'علی اکبری',
-        phone: '09120000000',
+        typeTitle: 'پیام ارتباط با ما',
+        date: '۱۴۰۳/۰۵/۲۶ - ۱۱:۱۵',
+        senderName: 'مریم کمالی',
+        phone: '09111710000',
         subject: 'consult',
         subjectTitle: 'مشاوره درمانی و طب تسکینی',
         message: 'با سلام، جهت دریافت وقت مشاوره تخصصی حضوری با جناب دکتر حزینی لطفا راهنمایی فرمایید.',
@@ -256,7 +246,8 @@ function switchTab(tabId) {
     reports: '<i class="fa-solid fa-file-pdf"></i> گزارش‌های عملکرد سالانه (اسناد PDF)',
     videos: '<i class="fa-solid fa-video"></i> رسانه و ویدیوهای آپارات',
     brochures: '<i class="fa-solid fa-book-medical"></i> کتب مرجع و بروشورهای آموزشی',
-    settings: '<i class="fa-solid fa-sliders"></i> آمار صفحه اصلی و تنظیمات سایت'
+    settings: '<i class="fa-solid fa-sliders"></i> آمار صفحه اصلی و تنظیمات سایت',
+    users: '<i class="fa-solid fa-users-gear"></i> مدیریت کاربران و دسترسی‌های پنل'
   };
   document.getElementById('current-tab-title').innerHTML = titles[tabId] || 'داشبورد مدیریت';
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -273,6 +264,7 @@ function renderAllSections() {
   renderVideos();
   renderBrochures();
   renderSettingsForm();
+  renderUsers();
 }
 
 function updateSummaryStats() {
@@ -1140,84 +1132,229 @@ document.getElementById('settings-form').addEventListener('submit', async (e) =>
   showToast('آمار و تنظیمات سایت با موفقیت به‌روزرسانی شد.', 'success');
 });
 
-// Change Password
-document.getElementById('change-pass-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const curPass = document.getElementById('cur-pass').value.trim();
-  const newPass = document.getElementById('new-pass').value.trim();
+// ====================================================
+// 7. USER MANAGEMENT MODULE
+// ====================================================
+function renderUsers() {
+  const tbody = document.getElementById('users-table-body');
+  if (!tbody) return;
 
-  if (IS_SERVER_MODE) {
-    try {
-      const res = await fetch('/api/change-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authToken}`
-        },
-        body: JSON.stringify({ currentPassword: curPass, newPassword: newPass })
-      });
-      const data = await res.json();
-      if (data.success) {
-        showToast('رمز عبور با موفقیت تغییر یافت.', 'success');
-        document.getElementById('change-pass-form').reset();
-      } else {
-        alert(data.message || 'خطا در تغییر رمز عبور.');
-      }
-      return;
-    } catch (e) {}
+  const users = appData.users || [];
+  if (users.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-muted);">
+          <i class="fa-solid fa-users" style="font-size: 2.5rem; color: #CBD5E1; margin-bottom: 12px; display: block;"></i>
+          کاربری در سیستم یافت نشد.
+        </td>
+      </tr>
+    `;
+    return;
   }
 
-  localStorage.setItem('hazini_custom_admin_password', newPass);
-  showToast('رمز عبور با موفقیت تغییر کرد.', 'success');
-  document.getElementById('change-pass-form').reset();
-});
+  tbody.innerHTML = users.map(user => {
+    const isMainAdmin = user.username.toLowerCase() === 'admin';
+    const roleBadge = user.role === 'مدیر کل' ? 'badge-primary' : (user.role === 'مدیر محتوا' ? 'badge-info' : 'badge-warning');
+    
+    return `
+      <tr>
+        <td>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 40px; height: 40px; border-radius: 10px; background: #E0F2F1; color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: bold;">
+              ${(user.name || user.username).charAt(0)}
+            </div>
+            <div>
+              <strong style="color: var(--text-main); display: block; font-size: 0.95rem;">${user.name || user.username}</strong>
+              <small style="color: var(--text-muted); font-size: 0.75rem;">${isMainAdmin ? 'کاربر ارشد سیستم' : 'دسترسی پنل'}</small>
+            </div>
+          </div>
+        </td>
+        <td style="direction: ltr; text-align: right; font-family: monospace; font-weight: 600; color: var(--primary);">
+          @${user.username}
+        </td>
+        <td>
+          <span class="badge ${roleBadge}" style="font-size: 0.8rem; padding: 4px 10px; border-radius: 6px; font-weight: 600;">
+            ${user.role || 'مدیر کل'}
+          </span>
+        </td>
+        <td style="color: var(--text-muted); font-size: 0.85rem;">
+          ${user.createdAt || '۱۴۰۳/۰۱/۰۱'}
+        </td>
+        <td style="text-align: center;">
+          <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <button class="btn btn-outline btn-sm" onclick="openUserModal(${user.id})" title="ویرایش و تغییر رمز">
+              <i class="fa-solid fa-pen-to-square"></i> ویرایش
+            </button>
+            ${!isMainAdmin ? `
+              <button class="btn btn-danger btn-sm" onclick="deleteUser(${user.id})" title="حذف کاربر">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            ` : `
+              <span style="font-size: 0.75rem; color: var(--text-muted); padding: 4px 8px;">غیرقابل حذف</span>
+            `}
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
 
-// ====================================================
-// 7. EXPORT DATA (FOR GITHUB PAGES SYNC)
-// ====================================================
-function openExportModal() {
-  const modal = document.getElementById('modal-export');
-  const preview = document.getElementById('export-json-preview');
-  
-  const cleanData = JSON.parse(JSON.stringify(appData));
-  delete cleanData.adminConfig;
+function openUserModal(userId = null) {
+  const modal = document.getElementById('modal-user');
+  const form = document.getElementById('user-form');
+  const title = document.getElementById('user-modal-title');
+  const editIdInput = document.getElementById('user-edit-id');
+  const passInput = document.getElementById('user-password');
+  const passLabel = document.getElementById('user-pass-label');
+  const usernameInput = document.getElementById('user-username');
 
-  preview.value = JSON.stringify(cleanData, null, 2);
+  form.reset();
+
+  if (userId) {
+    const user = (appData.users || []).find(u => u.id === userId);
+    if (!user) return;
+
+    title.innerHTML = '<i class="fa-solid fa-user-pen"></i> ویرایش اطلاعات کاربر';
+    editIdInput.value = user.id;
+    document.getElementById('user-name').value = user.name || '';
+    usernameInput.value = user.username || '';
+    usernameInput.disabled = (user.username.toLowerCase() === 'admin'); // Cannot change root admin username
+    document.getElementById('user-role').value = user.role || 'مدیر کل';
+    passLabel.textContent = 'رمز عبور جدید (در صورت تمایل به تغییر)';
+    passInput.required = false;
+  } else {
+    title.innerHTML = '<i class="fa-solid fa-user-plus"></i> افزودن کاربر جدید';
+    editIdInput.value = '';
+    usernameInput.disabled = false;
+    passLabel.textContent = 'رمز عبور *';
+    passInput.required = true;
+  }
+
   modal.classList.add('active');
 }
 
-function downloadExportFile(filename) {
-  const cleanData = JSON.parse(JSON.stringify(appData));
-  delete cleanData.adminConfig;
-
-  let content = '';
-  let mimeType = 'text/plain';
-
-  if (filename === 'data.js') {
-    content = `/**\n * Data store for Dr. Hazini and Mehr Golestan Association\n * Exported from Admin Panel\n */\nwindow.SITE_DATA = ${JSON.stringify(cleanData, null, 2)};\n`;
-    mimeType = 'application/javascript';
+function toggleUserModalPass() {
+  const pass = document.getElementById('user-password');
+  const icon = document.getElementById('user-eye-icon');
+  if (pass.type === 'password') {
+    pass.type = 'text';
+    icon.className = 'fa-solid fa-eye-slash';
   } else {
-    content = JSON.stringify(cleanData, null, 2);
-    mimeType = 'application/json';
+    pass.type = 'password';
+    icon.className = 'fa-solid fa-eye';
   }
-
-  const blob = new Blob([content], { type: `${mimeType};charset=utf-8` });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  showToast(`فایل ${filename} با موفقیت دانلود شد.`, 'success');
 }
 
-function copyExportToClipboard() {
-  const preview = document.getElementById('export-json-preview');
-  preview.select();
-  navigator.clipboard.writeText(preview.value);
-  showToast('داده‌ها با موفقیت در کلیپ‌بورد کپی شد.', 'success');
+// User Form Submit (Create / Edit)
+document.getElementById('user-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const editId = document.getElementById('user-edit-id').value;
+  const name = document.getElementById('user-name').value.trim();
+  const username = document.getElementById('user-username').value.trim();
+  const role = document.getElementById('user-role').value;
+  const password = document.getElementById('user-password').value.trim();
+  const confirmPassword = document.getElementById('user-confirm-password').value.trim();
+
+  if (password && password !== confirmPassword) {
+    alert('رمز عبور و تکرار آن یکسان نیستند.');
+    return;
+  }
+
+  if (editId) {
+    // Edit existing user
+    const userId = parseInt(editId);
+    const user = (appData.users || []).find(u => u.id === userId);
+    if (!user) return;
+
+    if (IS_SERVER_MODE) {
+      try {
+        await fetch(`/api/users/${userId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: JSON.stringify({ name, role, password: password || undefined })
+        });
+      } catch (err) {}
+    }
+
+    user.name = name;
+    user.role = role;
+    if (password) user.password = password;
+
+    showToast('اطلاعات کاربر با موفقیت ویرایش شد.', 'success');
+  } else {
+    // Check if username duplicate
+    const exists = (appData.users || []).some(u => u.username.toLowerCase() === username.toLowerCase());
+    if (exists) {
+      alert('این نام کاربری از قبل ثبت شده است.');
+      return;
+    }
+
+    if (!password || password.length < 4) {
+      alert('رمز عبور باید حداقل ۴ کاراکتر باشد.');
+      return;
+    }
+
+    const newId = (appData.users || []).length > 0 ? Math.max(...appData.users.map(u => u.id || 0)) + 1 : 1;
+    const newUser = {
+      id: newId,
+      username: username,
+      name: name,
+      role: role,
+      password: password,
+      createdAt: getPersianDateNow()
+    };
+
+    if (IS_SERVER_MODE) {
+      try {
+        await fetch('/api/users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: JSON.stringify(newUser)
+        });
+      } catch (err) {}
+    }
+
+    if (!appData.users) appData.users = [];
+    appData.users.push(newUser);
+    showToast('کاربر جدید با موفقیت اضافه شد.', 'success');
+  }
+
+  saveLocalData();
+  renderUsers();
+  closeAdminModal('modal-user');
+});
+
+async function deleteUser(userId) {
+  const user = (appData.users || []).find(u => u.id === userId);
+  if (!user) return;
+
+  if (user.username.toLowerCase() === 'admin') {
+    alert('کاربر اصلی admin قابل حذف نیست.');
+    return;
+  }
+
+  if (!confirm(`آیا از حذف حساب کاربری "${user.name || user.username}" اطمینان دارید؟`)) return;
+
+  if (IS_SERVER_MODE) {
+    try {
+      await fetch(`/api/users/${userId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
+    } catch (err) {}
+  }
+
+  appData.users = (appData.users || []).filter(u => u.id !== userId);
+  saveLocalData();
+  renderUsers();
+  showToast('حساب کاربری با موفقیت حذف گردید.', 'success');
 }
 
 // ====================================================

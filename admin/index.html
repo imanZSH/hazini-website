@@ -65,6 +65,13 @@
             <span>آمار و تنظیمات سایت</span>
           </div>
         </button>
+
+        <button class="nav-item" data-tab="users">
+          <div class="nav-item-content">
+            <i class="fa-solid fa-users-gear"></i>
+            <span>مدیریت کاربران</span>
+          </div>
+        </button>
       </nav>
 
       <div class="sidebar-footer">
@@ -393,26 +400,39 @@
                 </button>
               </form>
 
-              <hr style="border: 0; border-top: 1px solid var(--border); margin: 36px 0 24px;">
+            </div>
+          </div>
+        </section>
 
-              <h4 style="color: var(--danger); font-weight: 800; margin-bottom: 16px;">
-                <i class="fa-solid fa-lock"></i> تغییر رمز عبور پنل مدیریت
-              </h4>
-
-              <form id="change-pass-form" style="max-width: 500px;">
-                <div class="form-group" style="margin-bottom: 14px;">
-                  <label class="form-label">رمز عبور فعلی</label>
-                  <input type="password" id="cur-pass" class="form-input" required>
-                </div>
-                <div class="form-group" style="margin-bottom: 18px;">
-                  <label class="form-label">رمز عبور جدید</label>
-                  <input type="password" id="new-pass" class="form-input" minlength="4" required>
-                </div>
-                <button type="submit" class="btn btn-danger">
-                  <i class="fa-solid fa-key"></i> تغییر رمز عبور
-                </button>
-              </form>
-
+        <!-- 7. Users Tab -->
+        <section id="tab-users" class="tab-content" style="display: none;">
+          <div class="admin-panel-card">
+            <div class="panel-header" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+              <div>
+                <h3 class="panel-title"><i class="fa-solid fa-users-gear"></i> مدیریت کاربران و دسترسی‌ها</h3>
+                <p class="panel-subtitle">تعریف مدیران جدید، ویرایش اطلاعات، تعیین نقش‌ها و تغییر رمز عبور کاربران پنل</p>
+              </div>
+              <button class="btn btn-primary" onclick="openUserModal()">
+                <i class="fa-solid fa-user-plus"></i> افزودن کاربر جدید
+              </button>
+            </div>
+            <div class="panel-body">
+              <div class="table-responsive">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>نام و نام خانوادگی</th>
+                      <th>نام کاربری</th>
+                      <th>نقش / دسترسی</th>
+                      <th>تاریخ ایجاد</th>
+                      <th style="text-align: center;">عملیات</th>
+                    </tr>
+                  </thead>
+                  <tbody id="users-table-body">
+                    <!-- Injected dynamically -->
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </section>
@@ -624,7 +644,57 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" onclick="closeAdminModal('modal-brochure')">انصراف</button>
-          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-upload"></i> بارگذاری فایل</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-upload"></i> آپلود و ذخیره سند</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 6. User Modal (Add / Edit) -->
+  <div id="modal-user" class="admin-modal-overlay">
+    <div class="admin-modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="user-modal-title"><i class="fa-solid fa-user-plus"></i> افزودن کاربر جدید</h3>
+        <button class="modal-close" onclick="closeAdminModal('modal-user')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="user-form">
+        <input type="hidden" id="user-edit-id">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">نام و نام خانوادگی *</label>
+              <input type="text" id="user-name" class="form-input" required placeholder="مثال: دکتر عبدالرحیم حزینی">
+            </div>
+            <div class="form-group">
+              <label class="form-label">نام کاربری (انگلیسی) *</label>
+              <input type="text" id="user-username" class="form-input" required placeholder="مثال: dr.hazini" style="direction: ltr; text-align: left;">
+            </div>
+            <div class="form-group full">
+              <label class="form-label">نقش و سطح دسترسی *</label>
+              <select id="user-role" class="form-select">
+                <option value="مدیر کل">مدیر کل (دسترسی کامل)</option>
+                <option value="مدیر محتوا">مدیر محتوا (مقالات، ویدیوها و اسناد)</option>
+                <option value="پاسخگوی فرم‌ها">پاسخگوی فرم‌ها (صندوق پیام‌ها و خدمات)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" id="user-pass-label">رمز عبور *</label>
+              <div style="position: relative;">
+                <input type="password" id="user-password" class="form-input" placeholder="حداقل ۴ کاراکتر..." style="padding-left: 36px;">
+                <button type="button" class="btn-icon" style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%);" onclick="toggleUserModalPass()">
+                  <i class="fa-solid fa-eye" id="user-eye-icon"></i>
+                </button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">تکرار رمز عبور</label>
+              <input type="password" id="user-confirm-password" class="form-input" placeholder="تکرار رمز عبور...">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeAdminModal('modal-user')">انصراف</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> ذخیره اطلاعات کاربر</button>
         </div>
       </form>
     </div>

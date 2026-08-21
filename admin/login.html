@@ -16,16 +16,25 @@
     <p class="login-subtitle">پورتال دکتر حزینی و کانون حامیان بیماران سرطانی مهر گلستان</p>
 
     <form id="login-form">
-      <div class="form-group" style="text-align: right; margin-bottom: 20px;">
-        <label class="form-label" for="password">رمز عبور مدیریت</label>
+      <div class="form-group" style="text-align: right; margin-bottom: 16px;">
+        <label class="form-label" for="username">نام کاربری</label>
         <div style="position: relative;">
-          <input type="password" id="password" class="form-input" placeholder="رمز عبور را وارد فرمایید..." required style="width: 100%; padding-left: 40px;">
+          <input type="text" id="username" class="form-input" placeholder="نام کاربری را وارد نمایید..." required value="admin" style="width: 100%; padding-left: 12px; padding-right: 40px;">
+          <i class="fa-solid fa-user" style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: #94A3B8;"></i>
+        </div>
+      </div>
+
+      <div class="form-group" style="text-align: right; margin-bottom: 20px;">
+        <label class="form-label" for="password">رمز عبور</label>
+        <div style="position: relative;">
+          <input type="password" id="password" class="form-input" placeholder="رمز عبور را وارد فرمایید..." required style="width: 100%; padding-left: 40px; padding-right: 40px;">
+          <i class="fa-solid fa-lock" style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: #94A3B8;"></i>
           <button type="button" id="toggle-pass" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #94A3B8; cursor: pointer;">
             <i class="fa-solid fa-eye" id="eye-icon"></i>
           </button>
         </div>
-        <small style="color: #64748B; font-size: 0.75rem; margin-top: 4px; display: block;">
-          رمز پیش‌فرض سیستم: <code style="background: #E2E8F0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">admin</code>
+        <small style="color: #64748B; font-size: 0.75rem; margin-top: 6px; display: block;">
+          حساب پیش‌فرض سیستم: نام‌کاربری <code style="background: #E2E8F0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">admin</code> | رمز <code style="background: #E2E8F0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">admin</code>
         </small>
       </div>
 
@@ -57,6 +66,7 @@
     }
 
     // Toggle password visibility
+    const userInput = document.getElementById('username');
     const passInput = document.getElementById('password');
     const toggleBtn = document.getElementById('toggle-pass');
     const eyeIcon = document.getElementById('eye-icon');
@@ -82,11 +92,11 @@
       errorBox.style.display = 'block';
     }
 
-    function setAuthAndRedirect(token, remember) {
-      if (remember) {
-        localStorage.setItem('hazini_admin_token', token);
-      } else {
-        sessionStorage.setItem('hazini_admin_token', token);
+    function setAuthAndRedirect(token, userObj, remember) {
+      const storage = remember ? localStorage : sessionStorage;
+      storage.setItem('hazini_admin_token', token);
+      if (userObj) {
+        storage.setItem('hazini_current_user', JSON.stringify(userObj));
       }
       window.location.href = 'index.html';
     }
@@ -97,6 +107,7 @@
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> در حال بررسی...';
 
+      const username = userInput.value.trim();
       const password = passInput.value.trim();
       const remember = document.getElementById('remember-me').checked;
       const isLocalHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -108,18 +119,17 @@
             const res = await fetch('/api/login', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ password })
+              body: JSON.stringify({ username, password })
             });
 
             const contentType = res.headers.get('content-type') || '';
             if (contentType.includes('application/json')) {
-              if (res.ok) {
-                const data = await res.json();
-                setAuthAndRedirect(data.token || ('admin_session_' + password), remember);
+              const data = await res.json();
+              if (res.ok && data.success) {
+                setAuthAndRedirect(data.token || ('admin_session_' + username), data.user, remember);
                 return;
-              } else if (res.status === 401) {
-                const errData = await res.json().catch(() => ({}));
-                showError(errData.message || 'رمز عبور اشتباه است.');
+              } else {
+                showError(data.message || 'نام کاربری یا رمز عبور اشتباه است.');
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> ورود به داشبورد مدیریت';
                 return;
@@ -130,14 +140,31 @@
           }
         }
 
-        // Static mode (GitHub Pages) or fallback
-        const customPass = localStorage.getItem('hazini_custom_admin_password') || 'admin';
-        if (password === customPass || password === 'admin') {
-          const token = 'admin_session_' + Date.now();
-          setAuthAndRedirect(token, remember);
+        // Static mode (GitHub Pages) or local storage credentials check
+        let users = [];
+        const savedUsers = localStorage.getItem('hazini_admin_users');
+        if (savedUsers) {
+          try { users = JSON.parse(savedUsers); } catch(e) {}
+        }
+        
+        // Default users if not set
+        if (!users || users.length === 0) {
+          users = [
+            { id: 1, username: 'admin', name: 'مدیر اصلی سیستم', role: 'مدیر کل', password: 'admin' }
+          ];
+          localStorage.setItem('hazini_admin_users', JSON.stringify(users));
+        }
+
+        // Check if matching user exists
+        const matchedUser = users.find(u => u.username.toLowerCase() === username.toLowerCase() && u.password === password);
+        
+        if (matchedUser) {
+          const token = 'admin_session_' + matchedUser.username + '_' + Date.now();
+          const userSafe = { id: matchedUser.id, username: matchedUser.username, name: matchedUser.name, role: matchedUser.role };
+          setAuthAndRedirect(token, userSafe, remember);
           return;
         } else {
-          showError('رمز عبور اشتباه است.');
+          showError('نام کاربری یا رمز عبور اشتباه است.');
           submitBtn.disabled = false;
           submitBtn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> ورود به داشبورد مدیریت';
         }

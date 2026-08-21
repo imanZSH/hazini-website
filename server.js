@@ -81,9 +81,10 @@ function saveDB(data) {
   try {
     fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf8');
     
-    // Auto-sync client data.js (excluding admin password)
+    // Auto-sync client data.js (excluding admin config and users)
     const clientData = JSON.parse(JSON.stringify(data));
     delete clientData.adminConfig;
+    delete clientData.users;
     
     const jsContent = `/**
  * Data store for Dr. Hazini and Mehr Golestan Cancer Support Association
@@ -118,57 +119,127 @@ function getShamsiDateString() {
 }
 
 // ----------------------------------------------------
-// AUTH & ADMIN APIS
+// AUTH & USER APIS
 // ----------------------------------------------------
 
-// Simple token auth header or query check
 function authenticateAdmin(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.replace('Bearer ', '');
-  const db = getDB();
-  const validPass = (db.adminConfig && db.adminConfig.password) || 'admin';
-  
-  if (token === validPass || token === 'admin_session_token_' + validPass) {
-    return next();
+  if (!token) {
+    return res.status(401).json({ success: false, message: 'دسترسی غیرمجاز. لطفاً وارد شوید.' });
   }
-  return res.status(401).json({ success: false, message: 'دسترسی غیرمجاز. لطفاً وارد شوید.' });
+  return next();
 }
 
-// Login
+// Login with Username & Password
 app.post('/api/login', (req, res) => {
-  const { password } = req.body;
+  const { username, password } = req.body;
   const db = getDB();
-  const currentPass = (db.adminConfig && db.adminConfig.password) || 'admin';
   
-  if (password === currentPass) {
-    if (!db.adminConfig) db.adminConfig = {};
-    db.adminConfig.lastLogin = new Date().toISOString();
+  if (!db.users || !Array.isArray(db.users) || db.users.length === 0) {
+    db.users = [
+      { id: 1, username: 'admin', name: 'مدیر اصلی سیستم', role: 'مدیر کل', password: 'admin', createdAt: '۱۴۰۳/۰۱/۰۱' }
+    ];
+    saveDB(db);
+  }
+
+  const user = db.users.find(u => 
+    u.username.toLowerCase() === (username || '').trim().toLowerCase() && 
+    u.password === (password || '').trim()
+  );
+  
+  if (user) {
+    user.lastLogin = new Date().toISOString();
     saveDB(db);
     return res.json({
       success: true,
-      token: 'admin_session_token_' + currentPass,
+      token: 'admin_session_' + user.username + '_' + Date.now(),
+      user: { id: user.id, username: user.username, name: user.name, role: user.role },
       message: 'ورود موفقیت‌آمیز'
     });
   }
-  return res.status(401).json({ success: false, message: 'رمز عبور اشتباه است.' });
+  
+  return res.status(401).json({ success: false, message: 'نام کاربری یا رمز عبور اشتباه است.' });
 });
 
-// Change Password
-app.post('/api/change-password', authenticateAdmin, (req, res) => {
-  const { currentPassword, newPassword } = req.body;
+// Get Users List
+app.get('/api/users', authenticateAdmin, (req, res) => {
   const db = getDB();
-  const currentPass = (db.adminConfig && db.adminConfig.password) || 'admin';
+  const users = (db.users || []).map(u => ({
+    id: u.id,
+    username: u.username,
+    name: u.name,
+    role: u.role,
+    createdAt: u.createdAt || '۱۴۰۳/۰۱/۰۱'
+  }));
+  res.json(users);
+});
 
-  if (currentPassword !== currentPass) {
-    return res.status(400).json({ success: false, message: 'رمز عبور فعلی نادرست است.' });
-  }
-  if (!newPassword || newPassword.length < 4) {
-    return res.status(400).json({ success: false, message: 'رمز عبور جدید باید حداقل ۴ کاراکتر باشد.' });
+// Create User
+app.post('/api/users', authenticateAdmin, (req, res) => {
+  const { username, name, role, password } = req.body;
+  if (!username || !password || !name) {
+    return res.status(400).json({ success: false, message: 'تمامی فیلدهای ضروری را پر نمایید.' });
   }
 
-  db.adminConfig.password = newPassword;
+  const db = getDB();
+  if (!db.users) db.users = [];
+
+  const exists = db.users.some(u => u.username.toLowerCase() === username.trim().toLowerCase());
+  if (exists) {
+    return res.status(400).json({ success: false, message: 'این نام کاربری از قبل ثبت شده است.' });
+  }
+
+  const newId = db.users.length > 0 ? Math.max(...db.users.map(u => u.id || 0)) + 1 : 1;
+  const newUser = {
+    id: newId,
+    username: username.trim(),
+    name: name.trim(),
+    role: role || 'مدیر کل',
+    password: password.trim(),
+    createdAt: getShamsiDateString().split('-')[0].trim()
+  };
+
+  db.users.push(newUser);
   saveDB(db);
-  res.json({ success: true, message: 'رمز عبور با موفقیت تغییر یافت.' });
+  res.json({ success: true, message: 'کاربر جدید با موفقیت افزوده شد.', user: newUser });
+});
+
+// Update User
+app.put('/api/users/:id', authenticateAdmin, (req, res) => {
+  const id = parseInt(req.params.id);
+  const { name, role, password } = req.body;
+  const db = getDB();
+  if (!db.users) db.users = [];
+
+  const user = db.users.find(u => u.id === id);
+  if (!user) {
+    return res.status(404).json({ success: false, message: 'کاربر یافت نشد.' });
+  }
+
+  if (name) user.name = name.trim();
+  if (role) user.role = role;
+  if (password && password.trim().length >= 4) {
+    user.password = password.trim();
+  }
+
+  saveDB(db);
+  res.json({ success: true, message: 'اطلاعات کاربر با موفقیت به‌روزرسانی شد.' });
+});
+
+// Delete User
+app.delete('/api/users/:id', authenticateAdmin, (req, res) => {
+  const id = parseInt(req.params.id);
+  const db = getDB();
+  if (!db.users) db.users = [];
+
+  if (db.users.length <= 1) {
+    return res.status(400).json({ success: false, message: 'حداقل باید یک کاربر در سیستم باقی بماند.' });
+  }
+
+  db.users = db.users.filter(u => u.id !== id);
+  saveDB(db);
+  res.json({ success: true, message: 'کاربر با موفقیت حذف گردید.' });
 });
 
 // ----------------------------------------------------
