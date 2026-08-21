@@ -94,9 +94,11 @@ body {
   width: 44px;
   height: 44px;
   border-radius: 10px;
-  background: #fff;
+  background: #ffffff;
   padding: 4px;
   object-fit: contain;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
 }
 
 .sidebar-brand-title {
