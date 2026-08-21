@@ -146,6 +146,18 @@
   padding: 0;
 }
 
+html, body,
+input, button, select, textarea, optgroup,
+h1, h2, h3, h4, h5, h6,
+p, a, span, label, table, th, td, div, li, ul, ol, section, aside, header, footer, nav, main, small, strong, b, em {
+  font-family: var(--font-family);
+}
+
+/* Retain FontAwesome icon fonts */
+.fa, .fas, .far, .fab, .fa-solid, .fa-regular, .fa-brands, [class*="fa-"] {
+  font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands", var(--fa-style-family, "Font Awesome 6 Free") !important;
+}
+
 html {
   direction: rtl;
   text-align: right;
@@ -154,7 +166,6 @@ html {
 }
 
 body {
-  font-family: var(--font-family);
   background-color: var(--bg-main);
   color: var(--text-main);
   line-height: 1.8;
