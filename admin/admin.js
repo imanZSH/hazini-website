@@ -68,7 +68,8 @@ async function initAppData() {
       headers: { 'Authorization': `Bearer ${authToken}` }
     });
 
-    if (res.ok) {
+    const contentType = res.headers.get('content-type') || '';
+    if (res.ok && contentType.includes('application/json')) {
       IS_SERVER_MODE = true;
       const submissions = await res.json();
       
