@@ -39,13 +39,48 @@
 
       <nav class="nav-links">
         <a href="index.html" class="nav-link">صفحه اصلی</a>
-        <a href="services.html" class="nav-link active">خدمات تخصصی</a>
-        <a href="articles.html" class="nav-link">مقالات و کتب</a>
-        <a href="brochures.html" class="nav-link">بروشورها</a>
-        <a href="media.html" class="nav-link">رسانه و ویدیوها</a>
-        <a href="reports.html" class="nav-link">گزارش عملکرد</a>
-        <a href="donate.html" class="nav-link">حمایت و نیکوکاری</a>
-        <a href="about.html" class="nav-link">درباره ما</a>
+        <a href="services.html" class="nav-link">خدمات تخصصی</a>
+
+        <!-- Dropdown 1: آموزش و رسانه -->
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false">
+            آموزش و رسانه
+            <i class="fa-solid fa-chevron-down dropdown-chevron"></i>
+          </button>
+          <div class="dropdown-menu" role="menu">
+            <a href="articles.html" class="dropdown-item" role="menuitem">
+              <i class="fa-solid fa-book-open"></i> مقالات و کتب
+            </a>
+            <a href="brochures.html" class="dropdown-item" role="menuitem">
+              <i class="fa-solid fa-file-lines"></i> بروشورها
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="media.html" class="dropdown-item" role="menuitem">
+              <i class="fa-solid fa-video"></i> رسانه و ویدیوها
+            </a>
+          </div>
+        </div>
+
+        <!-- Dropdown 2: درباره ما -->
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false">
+            درباره ما
+            <i class="fa-solid fa-chevron-down dropdown-chevron"></i>
+          </button>
+          <div class="dropdown-menu" role="menu">
+            <a href="about.html" class="dropdown-item" role="menuitem">
+              <i class="fa-solid fa-circle-info"></i> درباره کانون
+            </a>
+            <a href="reports.html" class="dropdown-item" role="menuitem">
+              <i class="fa-solid fa-chart-line"></i> گزارش عملکرد
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="donate.html" class="dropdown-item" role="menuitem">
+              <i class="fa-solid fa-hand-holding-heart"></i> حمایت و نیکوکاری
+            </a>
+          </div>
+        </div>
+
         <a href="contact.html" class="nav-link">تماس با ما</a>
       </nav>
 

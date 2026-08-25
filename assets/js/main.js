@@ -55,7 +55,7 @@ function showToast(message, type = 'success') {
   }, 4000);
 }
 
-// 1. Mobile Navigation
+// 1. Mobile Navigation (with dropdown accordion support)
 function initMobileNav() {
   const menuBtn = document.querySelector('.mobile-menu-btn');
   const navLinks = document.querySelector('.nav-links');
@@ -66,29 +66,80 @@ function initMobileNav() {
       if (isOpen) {
         navLinks.classList.remove('mobile-open');
         menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
+        // Close all dropdowns when menu closes
+        navLinks.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('dropdown-open'));
       } else {
         navLinks.classList.add('mobile-open');
         menuBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
       }
     });
 
-    // Close on link click
-    navLinks.querySelectorAll('a').forEach(link => {
+    // Handle dropdown triggers inside mobile menu (accordion toggle)
+    navLinks.querySelectorAll('.nav-dropdown-trigger').forEach(trigger => {
+      trigger.addEventListener('click', (e) => {
+        // Only intercept on mobile (when nav-links is a column/mobile-open)
+        if (!navLinks.classList.contains('mobile-open')) return;
+        e.preventDefault();
+        e.stopPropagation();
+        const dropdown = trigger.closest('.nav-dropdown');
+        const isOpen = dropdown.classList.contains('dropdown-open');
+        // Close all other open dropdowns
+        navLinks.querySelectorAll('.nav-dropdown').forEach(d => {
+          d.classList.remove('dropdown-open');
+          d.querySelector('.nav-dropdown-trigger')?.setAttribute('aria-expanded', 'false');
+        });
+        if (!isOpen) {
+          dropdown.classList.add('dropdown-open');
+          trigger.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+
+    // Close menu on regular nav-link click
+    navLinks.querySelectorAll('a.nav-link, a.dropdown-item').forEach(link => {
       link.addEventListener('click', () => {
         navLinks.classList.remove('mobile-open');
         menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
+        navLinks.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('dropdown-open'));
       });
+    });
+
+    // Close mobile menu on outside click
+    document.addEventListener('click', (e) => {
+      if (!navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
+        navLinks.classList.remove('mobile-open');
+        menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
+        navLinks.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('dropdown-open'));
+      }
     });
   }
 }
 
-// 2. Active Page Highlighter
+// 2. Active Page Highlighter (marks parent dropdown trigger when child is active)
 function highlightActiveNav() {
   const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+
   document.querySelectorAll('.nav-link').forEach(link => {
     const href = link.getAttribute('href');
     if (href === currentPath || (currentPath === '' && href === 'index.html')) {
       link.classList.add('active');
+    } else {
+      link.classList.remove('active');
+    }
+  });
+
+  // Also mark dropdown items and their parent trigger as active
+  document.querySelectorAll('.dropdown-item').forEach(link => {
+    const href = link.getAttribute('href');
+    const linkPage = href ? href.split('#')[0].split('/').pop() : '';
+    if (linkPage === currentPath || (currentPath === '' && linkPage === 'index.html')) {
+      link.classList.add('active');
+      // Mark the parent dropdown trigger as active too
+      const parentDropdown = link.closest('.nav-dropdown');
+      if (parentDropdown) {
+        const trigger = parentDropdown.querySelector('.nav-dropdown-trigger');
+        if (trigger) trigger.classList.add('active');
+      }
     } else {
       link.classList.remove('active');
     }
