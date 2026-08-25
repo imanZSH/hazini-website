@@ -903,33 +903,33 @@ button {
 
 /* 1. Top-Right Card: Home Visit */
 .hero-slot-1 {
-  top: -12px;
+  top: -15px;
   right: 0;
   animation: floatSlotTopRight 6s ease-in-out infinite alternate;
 }
 
 /* 2. Bottom-Right Card: Equipment */
 .hero-slot-2 {
-  bottom: -12px;
+  bottom: -15px;
   right: 0;
   animation: floatSlotBottomRight 6.5s ease-in-out infinite alternate 0.5s;
 }
 
-/* 3. Upper-Left Card: Pain Relief & Spiritual Care */
+/* 3. Middle-Left Card: Pain Relief & Spiritual Care */
 .hero-slot-3 {
-  top: 28px;
-  left: 0;
+  top: 175px;
+  left: -10px;
   animation: floatSlotLeft 7s ease-in-out infinite alternate 1s;
 }
 
 @keyframes floatSlotTopRight {
   0% { transform: translateY(0px); }
-  100% { transform: translateY(-10px); }
+  100% { transform: translateY(-8px); }
 }
 
 @keyframes floatSlotBottomRight {
   0% { transform: translateY(0px); }
-  100% { transform: translateY(10px); }
+  100% { transform: translateY(8px); }
 }
 
 @keyframes floatSlotLeft {
