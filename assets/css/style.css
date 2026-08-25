@@ -799,8 +799,8 @@ button {
 .hero-motion-container {
   position: relative;
   width: 100%;
-  max-width: 560px;
-  min-height: 440px;
+  max-width: 580px;
+  min-height: 480px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -894,7 +894,7 @@ button {
   display: contents;
 }
 
-/* Floating Motion Slots (Refined Asymmetrical Balanced Orbit) */
+/* Floating Motion Slots (Balanced Non-Overlapping Perimeters) */
 .hero-floating-slot {
   position: absolute;
   z-index: 4;
@@ -903,24 +903,24 @@ button {
 
 /* 1. Top-Right Card: Home Visit */
 .hero-slot-1 {
-  top: -15px;
-  right: -15px;
+  top: -20px;
+  right: -10px;
   animation: floatSlotTopRight 6s ease-in-out infinite alternate;
 }
 
-/* 2. Bottom-Right Card: Equipment */
+/* 2. Bottom-Center Card: Equipment */
 .hero-slot-2 {
-  bottom: -15px;
-  right: -15px;
-  animation: floatSlotBottomRight 6.5s ease-in-out infinite alternate 0.5s;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: floatSlotBottomCenter 7s ease-in-out infinite alternate 1s;
 }
 
-/* 3. Middle-Left Card: Pain Relief & Spiritual Care */
+/* 3. Top-Left Card: Pain Relief & Spiritual Care */
 .hero-slot-3 {
-  top: 50%;
-  left: -45px;
-  transform: translateY(-50%);
-  animation: floatSlotLeft 7s ease-in-out infinite alternate 1s;
+  top: -20px;
+  left: -10px;
+  animation: floatSlotTopLeft 6.5s ease-in-out infinite alternate 0.5s;
 }
 
 @keyframes floatSlotTopRight {
@@ -928,21 +928,21 @@ button {
   100% { transform: translateY(-8px); }
 }
 
-@keyframes floatSlotBottomRight {
+@keyframes floatSlotTopLeft {
   0% { transform: translateY(0px); }
-  100% { transform: translateY(8px); }
+  100% { transform: translateY(-8px); }
 }
 
-@keyframes floatSlotLeft {
-  0% { transform: translateY(-50%); }
-  100% { transform: translateY(calc(-50% - 10px)); }
+@keyframes floatSlotBottomCenter {
+  0% { transform: translate(-50%, 0px); }
+  100% { transform: translate(-50%, 8px); }
 }
 
 /* Card Visual Element with Consistent 18px Radius & Soft Layered Shadows */
 .hero-floating-card {
   background: rgba(255, 255, 255, 0.98);
   color: var(--text-main);
-  padding: 10px 16px;
+  padding: 10px 14px;
   border-radius: 18px;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08);
   display: flex;
@@ -951,7 +951,8 @@ button {
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border: 1px solid rgba(255, 255, 255, 0.9);
-  white-space: nowrap;
+  max-width: 230px;
+  white-space: normal;
   cursor: pointer;
   transform: translateY(0) scale(1);
   transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease, background 0.3s ease;
