@@ -38,19 +38,22 @@
         </small>
       </div>
 
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; font-size: 0.85rem;">
-        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #475569;">
-          <input type="checkbox" id="remember-me" checked style="accent-color: var(--primary);">
+      <div style="display: flex; align-items: center; justify-content: flex-start; margin-bottom: 20px; font-size: 0.88rem;">
+        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #475569; user-select: none;">
+          <input type="checkbox" id="remember-me" checked style="accent-color: var(--primary); width: 16px; height: 16px; cursor: pointer;">
           مرا به خاطر بسپار
         </label>
-        <a href="../index.html" style="color: var(--primary); text-decoration: none; font-weight: 600;">
-          <i class="fa-solid fa-arrow-left"></i> بازگشت به سایت
-        </a>
       </div>
 
       <button type="submit" id="submit-btn" class="btn btn-primary btn-lg" style="width: 100%;">
         <i class="fa-solid fa-right-to-bracket"></i> ورود به داشبورد مدیریت
       </button>
+
+      <div style="margin-top: 18px; text-align: center;">
+        <a href="../index.html" style="display: inline-flex; align-items: center; gap: 8px; color: #64748B; text-decoration: none; font-size: 0.88rem; font-weight: 600; padding: 8px 16px; border-radius: 8px; transition: all 0.2s;" onmouseover="this.style.color='var(--primary)'; this.style.background='#F1F5F9';" onmouseout="this.style.color='#64748B'; this.style.background='transparent';">
+          <i class="fa-solid fa-arrow-right"></i> بازگشت به سایت
+        </a>
+      </div>
 
       <div id="login-error" style="display: none; margin-top: 18px; padding: 10px; border-radius: 8px; background: #FEE2E2; color: #DC2626; font-size: 0.85rem; font-weight: 600;">
         <i class="fa-solid fa-circle-exclamation"></i> <span id="error-text">رمز عبور نادرست است.</span>
