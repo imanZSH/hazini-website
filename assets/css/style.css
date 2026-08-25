@@ -1975,10 +1975,10 @@ textarea.form-control {
 }
 
 /* ==========================================================================
-   TABLET & SMALL SCREENS (< 1024px)
-   Compact Structured Feature Grid Layout (Eliminates All Card Collisions)
+   TABLET & SMALL SCREENS (< 1200px)
+   Compact Structured Feature Grid Layout (Zero Overlaps, Zero Text Occlusion)
    ========================================================================== */
-@media (max-width: 1023px) {
+@media (max-width: 1199px) {
   .hero {
     padding: 60px 0 85px;
   }
@@ -2095,6 +2095,7 @@ textarea.form-control {
     white-space: normal;
     text-align: right;
     justify-content: flex-start;
+    max-width: 100%;
   }
 
   .floating-card-icon {
