@@ -476,6 +476,17 @@ button {
   border-radius: 2px 0 0 0;
 }
 
+/* Invisible hover bridge to prevent mouse leaving hover area when crossing the gap */
+.dropdown-menu::after {
+  content: '';
+  position: absolute;
+  top: -14px;
+  right: 0;
+  left: 0;
+  height: 14px;
+  background: transparent;
+}
+
 .nav-dropdown:hover .dropdown-menu,
 .nav-dropdown.dropdown-open .dropdown-menu {
   opacity: 1;
@@ -1897,7 +1908,8 @@ textarea.form-control {
     background: #F1F5F9;
   }
 
-  .nav-links.mobile-open .dropdown-menu::before {
+  .nav-links.mobile-open .dropdown-menu::before,
+  .nav-links.mobile-open .dropdown-menu::after {
     display: none;
   }
 
