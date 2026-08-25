@@ -894,7 +894,7 @@ button {
   display: contents;
 }
 
-/* Floating Motion Slots (Balanced Non-Overlapping Perimeters) */
+/* Floating Motion Slots (Refined Asymmetrical Balanced Orbit) */
 .hero-floating-slot {
   position: absolute;
   z-index: 4;
@@ -903,24 +903,23 @@ button {
 
 /* 1. Top-Right Card: Home Visit */
 .hero-slot-1 {
-  top: -20px;
-  right: -10px;
+  top: -25px;
+  right: -25px;
   animation: floatSlotTopRight 6s ease-in-out infinite alternate;
 }
 
-/* 2. Bottom-Center Card: Equipment */
+/* 2. Bottom-Right Card: Equipment */
 .hero-slot-2 {
   bottom: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  animation: floatSlotBottomCenter 7s ease-in-out infinite alternate 1s;
+  right: -25px;
+  animation: floatSlotBottomRight 6.5s ease-in-out infinite alternate 0.5s;
 }
 
-/* 3. Top-Left Card: Pain Relief & Spiritual Care */
+/* 3. Middle-Left Card: Pain Relief & Spiritual Care (Staggered to guarantee zero overlap with Card 1) */
 .hero-slot-3 {
-  top: -20px;
-  left: -10px;
-  animation: floatSlotTopLeft 6.5s ease-in-out infinite alternate 0.5s;
+  top: 90px;
+  left: -55px;
+  animation: floatSlotLeft 7s ease-in-out infinite alternate 1s;
 }
 
 @keyframes floatSlotTopRight {
@@ -928,14 +927,14 @@ button {
   100% { transform: translateY(-8px); }
 }
 
-@keyframes floatSlotTopLeft {
+@keyframes floatSlotBottomRight {
   0% { transform: translateY(0px); }
-  100% { transform: translateY(-8px); }
+  100% { transform: translateY(8px); }
 }
 
-@keyframes floatSlotBottomCenter {
-  0% { transform: translate(-50%, 0px); }
-  100% { transform: translate(-50%, 8px); }
+@keyframes floatSlotLeft {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-8px); }
 }
 
 /* Card Visual Element with Consistent 18px Radius & Soft Layered Shadows */
@@ -1990,18 +1989,19 @@ textarea.form-control {
 }
 
 /* ==========================================================================
-   TABLET & SMALL SCREENS (< 1200px)
-   Compact Structured Feature Grid Layout (Zero Overlaps, Zero Text Occlusion)
+   TABLET & SMALL LAPTOPS (768px – 1199px)
+   Maintain 2-Column Side-by-Side Layout with Proportional Scaling
    ========================================================================== */
-@media (max-width: 1199px) {
+@media (min-width: 768px) and (max-width: 1199px) {
   .hero {
-    padding: 60px 0 85px;
+    padding: 70px 0 95px;
   }
 
   .hero-inner {
-    grid-template-columns: 1fr;
-    text-align: center;
-    gap: 32px;
+    grid-template-columns: 1.12fr 0.88fr;
+    align-items: center;
+    gap: 20px;
+    text-align: right;
   }
 
   .hero-content {
@@ -2010,37 +2010,124 @@ textarea.form-control {
 
   .hero-badge {
     margin-bottom: 16px;
-    font-size: 0.82rem;
+    font-size: 0.85rem;
+  }
+
+  .hero-title {
+    font-size: 2.15rem;
+    line-height: 1.35;
+    margin-bottom: 16px;
+  }
+
+  .hero-desc {
+    font-size: 0.98rem;
+    line-height: 1.8;
+    margin-bottom: 24px;
+    max-width: 100%;
+  }
+
+  .hero-buttons {
+    justify-content: flex-start;
+    gap: 12px;
+  }
+
+  .hero-buttons .btn {
+    padding: 9px 18px;
+    font-size: 0.9rem;
+  }
+
+  .hero-visual {
+    order: 2;
+    min-height: 420px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Scale the entire motion hub proportionally so cards stay in side-by-side orbit */
+  .hero-motion-container {
+    transform: scale(0.8);
+    transform-origin: center right;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .services-grid, .articles-grid, .video-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ==========================================================================
+   MOBILE VIEWPORTS (< 768px)
+   Compact Structured Feature Grid Layout
+   ========================================================================== */
+@media (max-width: 767px) {
+  .top-bar {
+    display: none;
+  }
+
+  .hero {
+    padding: 45px 0 70px;
+  }
+
+  .hero-inner {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 28px;
+  }
+
+  .hero-content {
+    order: 1;
+  }
+
+  .hero-badge {
+    margin-bottom: 14px;
+    font-size: 0.8rem;
     padding: 5px 14px;
   }
 
   .hero-title {
-    font-size: 2.1rem;
+    font-size: 1.75rem;
     line-height: 1.35;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
 
   .hero-desc {
-    font-size: 0.96rem;
-    line-height: 1.8;
-    margin: 0 auto 24px;
-    max-width: 540px;
+    font-size: 0.92rem;
+    line-height: 1.75;
+    margin: 0 auto 20px;
+    max-width: 480px;
   }
 
   .hero-buttons {
     justify-content: center;
-    gap: 12px;
+    gap: 10px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-buttons .btn {
+    width: 100%;
+    max-width: 320px;
+    padding: 11px 20px;
+    font-size: 0.92rem;
   }
 
   .hero-visual {
     order: 2;
     min-height: auto;
     width: 100%;
-    max-width: 440px;
+    max-width: 420px;
     margin: 0 auto;
   }
 
-  /* Compact Structured Visual Hub */
+  /* Compact Structured Feature Grid */
   .hero-motion-container {
     display: flex;
     flex-direction: column;
@@ -2054,38 +2141,36 @@ textarea.form-control {
 
   .hero-central-core {
     width: 100%;
-    max-width: 400px;
-    padding: 22px 18px;
-    border-radius: 22px;
+    max-width: 100%;
+    padding: 20px 16px;
+    border-radius: 20px;
     margin-bottom: 0;
     animation: none;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   }
 
   .core-icon-wrap {
-    width: 52px;
-    height: 52px;
-    font-size: 1.5rem;
-    margin-bottom: 10px;
+    width: 48px;
+    height: 48px;
+    font-size: 1.4rem;
+    margin-bottom: 8px;
   }
 
   .core-title {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     margin-bottom: 2px;
   }
 
   .core-subtitle {
-    font-size: 0.8rem;
-    margin-bottom: 10px;
+    font-size: 0.78rem;
+    margin-bottom: 8px;
   }
 
-  /* Structured 2+1 Feature Badges Grid */
   .hero-badges-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 8px;
     width: 100%;
-    max-width: 400px;
   }
 
   .hero-floating-slot {
@@ -2096,14 +2181,13 @@ textarea.form-control {
     margin: 0;
   }
 
-  /* Slot 3 spans full width (Row 2) */
   .hero-slot-3 {
     grid-column: span 2;
   }
 
   .hero-floating-card {
     width: 100%;
-    padding: 10px 14px;
+    padding: 10px 12px;
     border-radius: 14px;
     gap: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -2114,15 +2198,15 @@ textarea.form-control {
   }
 
   .floating-card-icon {
-    width: 34px;
-    height: 34px;
-    font-size: 1rem;
+    width: 32px;
+    height: 32px;
+    font-size: 0.95rem;
     border-radius: 10px;
     flex-shrink: 0;
   }
 
   .floating-card-info strong {
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     line-height: 1.25;
     display: block;
     color: var(--text-main);
@@ -2143,46 +2227,6 @@ textarea.form-control {
   .hero-pulse-ring,
   .hero-ambient-glow {
     display: none;
-  }
-
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .services-grid, .articles-grid, .video-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .footer-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* ==========================================================================
-   MOBILE PHONES (< 768px)
-   ========================================================================== */
-@media (max-width: 767px) {
-  .top-bar {
-    display: none;
-  }
-
-  .hero {
-    padding: 45px 0 70px;
-  }
-
-  .hero-title {
-    font-size: 1.75rem;
-  }
-
-  .hero-buttons {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .hero-buttons .btn {
-    width: 100%;
-    max-width: 320px;
-    padding: 11px 20px;
   }
 
   .section-title {
