@@ -1974,19 +1974,18 @@ textarea.form-control {
 }
 
 /* ==========================================================================
-   TABLET & SMALL LAPTOPS (768px – 1199px)
-   Maintain 2-Column Side-by-Side Layout with Scaling
+   TABLET & SMALL SCREENS (< 1024px)
+   Compact Structured Feature Grid Layout (Eliminates All Card Collisions)
    ========================================================================== */
-@media (min-width: 768px) and (max-width: 1199px) {
+@media (max-width: 1023px) {
   .hero {
-    padding: 70px 0 100px;
+    padding: 60px 0 85px;
   }
 
   .hero-inner {
-    grid-template-columns: 1.12fr 0.88fr;
-    align-items: center;
-    gap: 24px;
-    text-align: right;
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 32px;
   }
 
   .hero-content {
@@ -1994,45 +1993,139 @@ textarea.form-control {
   }
 
   .hero-badge {
-    margin-bottom: 18px;
-    font-size: 0.85rem;
+    margin-bottom: 16px;
+    font-size: 0.82rem;
+    padding: 5px 14px;
   }
 
   .hero-title {
-    font-size: 2.15rem;
+    font-size: 2.1rem;
     line-height: 1.35;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
 
   .hero-desc {
-    font-size: 0.98rem;
+    font-size: 0.96rem;
     line-height: 1.8;
-    margin-bottom: 24px;
-    max-width: 100%;
+    margin: 0 auto 24px;
+    max-width: 540px;
   }
 
   .hero-buttons {
-    justify-content: flex-start;
+    justify-content: center;
     gap: 12px;
-  }
-
-  .hero-buttons .btn {
-    padding: 9px 18px;
-    font-size: 0.9rem;
   }
 
   .hero-visual {
     order: 2;
-    min-height: 380px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    min-height: auto;
+    width: 100%;
+    max-width: 440px;
+    margin: 0 auto;
   }
 
-  /* Scale the visual interactive composition down so it stays side-by-side */
+  /* Compact Structured Visual Hub */
   .hero-motion-container {
-    transform: scale(0.82);
-    transform-origin: center right;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    min-height: auto;
+    width: 100%;
+    max-width: 100%;
+    transform: none !important;
+  }
+
+  .hero-central-core {
+    width: 100%;
+    max-width: 400px;
+    padding: 22px 18px;
+    border-radius: 22px;
+    margin-bottom: 0;
+    animation: none;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .core-icon-wrap {
+    width: 52px;
+    height: 52px;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+
+  .core-title {
+    font-size: 1.2rem;
+    margin-bottom: 2px;
+  }
+
+  .core-subtitle {
+    font-size: 0.8rem;
+    margin-bottom: 10px;
+  }
+
+  /* Structured 2+1 Feature Badges Grid */
+  .hero-badges-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .hero-floating-slot {
+    position: static;
+    transform: none !important;
+    animation: none !important;
+    width: 100%;
+    margin: 0;
+  }
+
+  /* Slot 3 spans full width (Row 2) */
+  .hero-slot-3 {
+    grid-column: span 2;
+  }
+
+  .hero-floating-card {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 14px;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    white-space: normal;
+    text-align: right;
+    justify-content: flex-start;
+  }
+
+  .floating-card-icon {
+    width: 34px;
+    height: 34px;
+    font-size: 1rem;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+
+  .floating-card-info strong {
+    font-size: 0.78rem;
+    line-height: 1.25;
+    display: block;
+    color: var(--text-main);
+  }
+
+  .floating-card-info span {
+    font-size: 0.68rem;
+    line-height: 1.2;
+    display: block;
+    color: var(--text-muted);
+  }
+
+  .hero-slot-1 .floating-card-info span,
+  .hero-slot-2 .floating-card-info span {
+    display: none;
+  }
+
+  .hero-pulse-ring,
+  .hero-ambient-glow {
+    display: none;
   }
 
   .stats-grid {
@@ -2049,8 +2142,7 @@ textarea.form-control {
 }
 
 /* ==========================================================================
-   MOBILE VIEWPORTS (< 768px)
-   Compact Structured Feature Grid Layout
+   MOBILE PHONES (< 768px)
    ========================================================================== */
 @media (max-width: 767px) {
   .top-bar {
@@ -2058,41 +2150,14 @@ textarea.form-control {
   }
 
   .hero {
-    padding: 50px 0 75px;
-  }
-
-  .hero-inner {
-    grid-template-columns: 1fr;
-    text-align: center;
-    gap: 28px;
-  }
-
-  .hero-content {
-    order: 1;
-  }
-
-  .hero-badge {
-    margin-bottom: 14px;
-    font-size: 0.8rem;
-    padding: 5px 14px;
+    padding: 45px 0 70px;
   }
 
   .hero-title {
     font-size: 1.75rem;
-    line-height: 1.35;
-    margin-bottom: 12px;
-  }
-
-  .hero-desc {
-    font-size: 0.92rem;
-    line-height: 1.75;
-    margin: 0 auto 20px;
-    max-width: 480px;
   }
 
   .hero-buttons {
-    justify-content: center;
-    gap: 10px;
     flex-direction: column;
     align-items: center;
   }
@@ -2101,118 +2166,6 @@ textarea.form-control {
     width: 100%;
     max-width: 320px;
     padding: 11px 20px;
-    font-size: 0.92rem;
-  }
-
-  .hero-visual {
-    order: 2;
-    min-height: auto;
-    width: 100%;
-    max-width: 420px;
-    margin: 0 auto;
-  }
-
-  /* Mobile motion container: vertical stack of central card + badges grid */
-  .hero-motion-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    min-height: auto;
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .hero-central-core {
-    width: 100%;
-    max-width: 100%;
-    padding: 20px 16px;
-    border-radius: 20px;
-    margin-bottom: 0;
-    animation: none;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  }
-
-  .core-icon-wrap {
-    width: 48px;
-    height: 48px;
-    font-size: 1.4rem;
-    margin-bottom: 8px;
-  }
-
-  .core-title {
-    font-size: 1.15rem;
-    margin-bottom: 2px;
-  }
-
-  .core-subtitle {
-    font-size: 0.78rem;
-    margin-bottom: 8px;
-  }
-
-  /* Compact 2-column top row + 1-column bottom row Grid */
-  .hero-badges-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    width: 100%;
-  }
-
-  .hero-floating-slot {
-    position: static;
-    transform: none !important;
-    animation: none !important;
-    width: 100%;
-    margin: 0;
-  }
-
-  /* Slot 3 spans both columns (Full width in Row 2) */
-  .hero-slot-3 {
-    grid-column: span 2;
-  }
-
-  .hero-floating-card {
-    width: 100%;
-    padding: 10px 12px;
-    border-radius: 14px;
-    gap: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    white-space: normal;
-    text-align: right;
-    justify-content: flex-start;
-  }
-
-  .floating-card-icon {
-    width: 32px;
-    height: 32px;
-    font-size: 0.95rem;
-    border-radius: 10px;
-    flex-shrink: 0;
-  }
-
-  .floating-card-info strong {
-    font-size: 0.76rem;
-    line-height: 1.25;
-    display: block;
-    color: var(--text-main);
-  }
-
-  .floating-card-info span {
-    font-size: 0.68rem;
-    line-height: 1.2;
-    display: block;
-    color: var(--text-muted);
-  }
-
-  /* Hide long subtitles in the 2-column top row to keep them sleek and balanced */
-  .hero-slot-1 .floating-card-info span,
-  .hero-slot-2 .floating-card-info span {
-    display: none;
-  }
-
-  .hero-pulse-ring,
-  .hero-ambient-glow {
-    display: none;
   }
 
   .section-title {
