@@ -207,11 +207,11 @@ button {
 
 .container {
   width: 100%;
-  max-width: 1360px;
+  max-width: 1280px;
   margin-left: auto;
   margin-right: auto;
-  padding-left: clamp(16px, 3vw, 40px);
-  padding-right: clamp(16px, 3vw, 40px);
+  padding-left: clamp(20px, 3.5vw, 40px);
+  padding-right: clamp(20px, 3.5vw, 40px);
 }
 
 /* ==========================================================================
@@ -297,8 +297,7 @@ button {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 0;
-  gap: 10px;
+  gap: 12px;
   flex-wrap: nowrap;
 }
 
