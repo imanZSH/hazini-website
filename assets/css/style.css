@@ -910,7 +910,7 @@ button {
 
 /* 2. Bottom-Right Card: Equipment */
 .hero-slot-2 {
-  bottom: -20px;
+  bottom: 35px;
   right: -25px;
   animation: floatSlotBottomRight 6.5s ease-in-out infinite alternate 0.5s;
 }
