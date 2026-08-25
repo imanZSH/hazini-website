@@ -61,16 +61,22 @@ function initMobileNav() {
   const navLinks = document.querySelector('.nav-links');
 
   if (menuBtn && navLinks) {
-    menuBtn.addEventListener('click', () => {
+    menuBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       const isOpen = navLinks.classList.contains('mobile-open');
       if (isOpen) {
         navLinks.classList.remove('mobile-open');
         menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
-        // Close all dropdowns when menu closes
-        navLinks.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('dropdown-open'));
+        menuBtn.setAttribute('aria-expanded', 'false');
+        navLinks.querySelectorAll('.nav-dropdown').forEach(d => {
+          d.classList.remove('dropdown-open');
+          d.querySelector('.nav-dropdown-trigger')?.setAttribute('aria-expanded', 'false');
+        });
       } else {
         navLinks.classList.add('mobile-open');
         menuBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+        menuBtn.setAttribute('aria-expanded', 'true');
       }
     });
 
@@ -95,21 +101,36 @@ function initMobileNav() {
       });
     });
 
-    // Close menu on regular nav-link click
+    // Prevent clicks inside navLinks from closing the mobile container
+    navLinks.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+
+    // Close menu on navigation link click
     navLinks.querySelectorAll('a.nav-link, a.dropdown-item').forEach(link => {
       link.addEventListener('click', () => {
         navLinks.classList.remove('mobile-open');
         menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
-        navLinks.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('dropdown-open'));
+        menuBtn.setAttribute('aria-expanded', 'false');
+        navLinks.querySelectorAll('.nav-dropdown').forEach(d => {
+          d.classList.remove('dropdown-open');
+          d.querySelector('.nav-dropdown-trigger')?.setAttribute('aria-expanded', 'false');
+        });
       });
     });
 
     // Close mobile menu on outside click
     document.addEventListener('click', (e) => {
-      if (!navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
-        navLinks.classList.remove('mobile-open');
-        menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
-        navLinks.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('dropdown-open'));
+      if (navLinks.classList.contains('mobile-open')) {
+        if (!e.target.closest('.nav-links') && !e.target.closest('.mobile-menu-btn')) {
+          navLinks.classList.remove('mobile-open');
+          menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
+          menuBtn.setAttribute('aria-expanded', 'false');
+          navLinks.querySelectorAll('.nav-dropdown').forEach(d => {
+            d.classList.remove('dropdown-open');
+            d.querySelector('.nav-dropdown-trigger')?.setAttribute('aria-expanded', 'false');
+          });
+        }
       }
     });
   }
