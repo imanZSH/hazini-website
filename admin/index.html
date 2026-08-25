@@ -264,83 +264,90 @@
         <section id="tab-videos" class="tab-content" style="display: none;">
           <div class="panel-card">
             <div class="panel-header">
-          <div class="admin-panel-card">
-            <div class="panel-header">
-              <div>
-                <h3 class="panel-title"><i class="fa-solid fa-video"></i> رسانه و ویدیوهای آپارات</h3>
-                <p class="panel-subtitle">مدیریت ویدیوهای مصاحبه، مستند و گزارش‌های تصویری کانون</p>
+              <div class="panel-title-wrap">
+                <div>
+                  <h3 class="panel-title">رسانه و ویدیوهای آپارات</h3>
+                  <span class="panel-subtitle">مدیریت ویدیوهای مصاحبه، مستند و گزارش‌های تصویری کانون</span>
+                </div>
               </div>
-              <button class="btn btn-primary" onclick="openVideoModal()">
-                <i class="fa-solid fa-plus"></i> افزودن ویدیوی آپارات
-              </button>
+
+              <div class="panel-actions">
+                <button class="btn btn-primary" onclick="openVideoModal()">
+                  <i class="fa-solid fa-plus"></i> افزودن ویدیوی آپارات
+                </button>
+              </div>
             </div>
 
-            <div class="panel-body">
-              <div class="table-responsive">
-                <table class="admin-table">
-                  <thead>
-                    <tr>
-                      <th>شناسه آپارات</th>
-                      <th>عنوان ویدیو</th>
-                      <th>دسته‌بندی</th>
-                      <th>مدت زمان</th>
-                      <th style="text-align: center;">عملیات</th>
-                    </tr>
-                  </thead>
-                  <tbody id="videos-table-body">
-                    <!-- Injected dynamically -->
-                  </tbody>
-                </table>
-              </div>
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th style="width: 80px;">تصویر</th>
+                    <th>عنوان و توضیحات ویدیو</th>
+                    <th>شناسه آپارات</th>
+                    <th>تاریخ انتشار</th>
+                    <th style="text-align: center; width: 100px;">عملیات</th>
+                  </tr>
+                </thead>
+                <tbody id="videos-table-body">
+                  <!-- Dynamic Rows -->
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
 
-        <!-- 5. Brochures & Books Tab -->
+        <!-- ================= TAB 5: BROCHURES & BOOKS ================= -->
         <section id="tab-brochures" class="tab-content" style="display: none;">
-          <div class="admin-panel-card">
+          <div class="panel-card">
             <div class="panel-header">
-              <div>
-                <h3 class="panel-title"><i class="fa-solid fa-book-medical"></i> کتب مرجع و بروشورهای آموزشی</h3>
-                <p class="panel-subtitle">مدیریت فایل‌های Word و PDF بروشورهای تغذیه، پیشگیری و راهنما</p>
+              <div class="panel-title-wrap">
+                <div>
+                  <h3 class="panel-title">کتب مرجع و بروشورهای آموزشی</h3>
+                  <span class="panel-subtitle">مدیریت فایل‌های Word و PDF بروشورهای تغذیه، پیشگیری و راهنما</span>
+                </div>
               </div>
-              <button class="btn btn-primary" onclick="openBrochureModal()">
-                <i class="fa-solid fa-plus"></i> افزودن بروشور / کتاب
-              </button>
+
+              <div class="panel-actions">
+                <button class="btn btn-primary" onclick="openBrochureModal()">
+                  <i class="fa-solid fa-plus"></i> افزودن بروشور / کتاب
+                </button>
+              </div>
             </div>
 
-            <div class="panel-body">
-              <div class="table-responsive">
-                <table class="admin-table">
-                  <thead>
-                    <tr>
-                      <th>نوع</th>
-                      <th>عنوان سند</th>
-                      <th>دسته‌بندی</th>
-                      <th>نویسنده</th>
-                      <th style="text-align: center;">عملیات</th>
-                    </tr>
-                  </thead>
-                  <tbody id="brochures-table-body">
-                    <!-- Injected dynamically -->
-                  </tbody>
-                </table>
-              </div>
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>نوع سند</th>
+                    <th>عنوان فایل / سند</th>
+                    <th>نویسنده / دسته‌بندی</th>
+                    <th>حجم فایل</th>
+                    <th>دانلود</th>
+                    <th style="text-align: center; width: 100px;">عملیات</th>
+                  </tr>
+                </thead>
+                <tbody id="brochures-table-body">
+                  <!-- Dynamic Rows -->
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
 
-        <!-- 6. Settings & Stats Tab -->
+        <!-- ================= TAB 6: SETTINGS ================= -->
         <section id="tab-settings" class="tab-content" style="display: none;">
-          <div class="admin-panel-card">
+          <div class="panel-card">
             <div class="panel-header">
-              <div>
-                <h3 class="panel-title"><i class="fa-solid fa-sliders"></i> آمار صفحه اصلی و اطلاعات تماس سایت</h3>
-                <p class="panel-subtitle">ویرایش آمار نمایشی صفحه اول و مشخصات کانون</p>
+              <div class="panel-title-wrap">
+                <div>
+                  <h3 class="panel-title">آمار صفحه اصلی و اطلاعات تماس سایت</h3>
+                  <span class="panel-subtitle">ویرایش آمار نمایشی صفحه اول و مشخصات کانون</span>
+                </div>
               </div>
             </div>
 
-            <div class="panel-body">
+            <div style="padding: 24px;">
               <form id="settings-form">
                 <h4 style="color: var(--primary-dark); font-weight: 800; margin-bottom: 16px;">
                   <i class="fa-solid fa-chart-line"></i> شمارنده‌های آمار صفحه اصلی
@@ -398,47 +405,52 @@
           </div>
         </section>
 
-        <!-- 7. Users Tab -->
+        <!-- ================= TAB 7: USERS ================= -->
         <section id="tab-users" class="tab-content" style="display: none;">
-          <div class="admin-panel-card" style="margin-bottom: 24px;">
-            <div class="panel-header" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
-              <div>
-                <h3 class="panel-title"><i class="fa-solid fa-users-gear"></i> فهرست کاربران و مدیران سیستم</h3>
-                <p class="panel-subtitle">تعریف مدیران جدید، ویرایش اطلاعات، تعیین نقش‌ها و حذف حساب‌ها</p>
+          <div class="panel-card" style="margin-bottom: 24px;">
+            <div class="panel-header">
+              <div class="panel-title-wrap">
+                <div>
+                  <h3 class="panel-title">فهرست کاربران و مدیران سیستم</h3>
+                  <span class="panel-subtitle">تعریف مدیران جدید، ویرایش اطلاعات، تعیین نقش‌ها و حذف حساب‌ها</span>
+                </div>
               </div>
-              <button class="btn btn-primary" onclick="openUserModal()">
-                <i class="fa-solid fa-user-plus"></i> افزودن کاربر جدید
-              </button>
+              <div class="panel-actions">
+                <button class="btn btn-primary" onclick="openUserModal()">
+                  <i class="fa-solid fa-user-plus"></i> افزودن کاربر جدید
+                </button>
+              </div>
             </div>
-            <div class="panel-body">
-              <div class="table-responsive">
-                <table class="admin-table">
-                  <thead>
-                    <tr>
-                      <th>نام و نام خانوادگی</th>
-                      <th>نام کاربری</th>
-                      <th>نقش / دسترسی</th>
-                      <th>تاریخ ایجاد</th>
-                      <th style="text-align: center;">عملیات</th>
-                    </tr>
-                  </thead>
-                  <tbody id="users-table-body">
-                    <!-- Injected dynamically -->
-                  </tbody>
-                </table>
-              </div>
+
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>نام و نام خانوادگی</th>
+                    <th>نام کاربری</th>
+                    <th>نقش / دسترسی</th>
+                    <th>تاریخ ایجاد</th>
+                    <th style="text-align: center; width: 100px;">عملیات</th>
+                  </tr>
+                </thead>
+                <tbody id="users-table-body">
+                  <!-- Injected dynamically -->
+                </tbody>
+              </table>
             </div>
           </div>
 
           <!-- Change My Password Card -->
-          <div class="admin-panel-card">
+          <div class="panel-card">
             <div class="panel-header">
-              <div>
-                <h3 class="panel-title"><i class="fa-solid fa-key"></i> تغییر رمز عبور حساب کاربری من</h3>
-                <p class="panel-subtitle">تغییر رمز عبور حساب جاری که هم‌اکنون با آن وارد پنل شده‌اید</p>
+              <div class="panel-title-wrap">
+                <div>
+                  <h3 class="panel-title">تغییر رمز عبور حساب کاربری من</h3>
+                  <span class="panel-subtitle">تغییر رمز عبور حساب جاری که هم‌اکنون با آن وارد پنل شده‌اید</span>
+                </div>
               </div>
             </div>
-            <div class="panel-body">
+            <div style="padding: 24px;">
               <form id="change-my-pass-form" style="max-width: 540px;">
                 <div class="form-grid">
                   <div class="form-group full">
@@ -458,8 +470,9 @@
                     <input type="password" id="my-confirm-pass" class="form-input" minlength="4" required placeholder="تکرار رمز عبور جدید...">
                   </div>
                 </div>
-                <button type="submit" class="btn btn-primary" style="margin-top: 18px;">
-                  <i class="fa-solid fa-lock-open"></i> ثبت و به‌روزرسانی رمز عبور من
+
+                <button type="submit" class="btn btn-primary" style="margin-top: 16px;">
+                  <i class="fa-solid fa-key"></i> به‌روزرسانی رمز عبور من
                 </button>
               </form>
             </div>

@@ -872,19 +872,25 @@ function renderVideos() {
 
   tbody.innerHTML = videos.map(v => `
     <tr>
-      <td>
-        <img src="${v.image ? '../' + v.image : '../assets/images/mmmm-600x400.jpg'}" style="width: 60px; height: 42px; border-radius: 6px; object-fit: cover;" onerror="this.src='../assets/images/mmmm-600x400.jpg'">
+      <td style="width: 80px;">
+        <img src="${v.image ? '../' + v.image : '../assets/images/mmmm-600x400.jpg'}" style="width: 68px; height: 46px; border-radius: 8px; object-fit: cover;" onerror="this.src='../assets/images/mmmm-600x400.jpg'">
       </td>
       <td>
-        <strong>${v.title}</strong>
-        ${v.subtitle ? `<br><small style="color: var(--text-muted);">${v.subtitle}</small>` : ''}
+        <strong style="color: var(--text-main); display: block; font-size: 0.95rem;">${v.title}</strong>
+        ${v.subtitle ? `<small style="color: var(--text-muted); font-size: 0.8rem;">${v.subtitle}</small>` : ''}
       </td>
-      <td><a href="https://www.aparat.com/v/${v.aparatId}" target="_blank" class="badge badge-warning"><i class="fa-solid fa-play"></i> ${v.aparatId}</a></td>
+      <td>
+        <a href="https://www.aparat.com/v/${v.aparatId}" target="_blank" class="badge badge-warning" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none;">
+          <i class="fa-solid fa-play"></i> ${v.aparatId}
+        </a>
+      </td>
       <td style="font-size: 0.85rem; color: var(--text-muted);">${v.date || '-'}</td>
       <td>
-        <button class="btn-icon delete" title="حذف" onclick="deleteVideo(${v.id})">
-          <i class="fa-solid fa-trash-can"></i>
-        </button>
+        <div class="table-actions">
+          <button class="btn-icon delete" title="حذف" onclick="deleteVideo(${v.id})">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+        </div>
       </td>
     </tr>
   `).join('');
