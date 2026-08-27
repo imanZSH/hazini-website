@@ -1201,6 +1201,44 @@ window.SITE_DATA = {
   ],
   "submissions": [
     {
+      "id": 8,
+      "date": "۱۴۰۵/۰۶/۰۵ - ۱۶:۵۷",
+      "status": "unread",
+      "type": "service",
+      "typeTitle": "درخواست خدمات درمانی",
+      "patientName": "سید رضا حسینی (تست هلیوم)",
+      "phone": "09118889900",
+      "disease": "تومور بدخیم لنفاوی",
+      "serviceType": "home-care",
+      "serviceTypeTitle": "ویزیت و مراقبت در منزل",
+      "address": "گرگان، خیابان شالیکوبی، کوچه عدالت ۵",
+      "notes": "بیمار نیاز به تخت بیمارستانی و ویزیت هفتگی پزشک طب تسکینی در منزل دارد."
+    },
+    {
+      "id": 7,
+      "date": "۱۴۰۵/۰۶/۰۵ - ۱۶:۵۷",
+      "status": "unread",
+      "type": "contact",
+      "typeTitle": "تماس با ما",
+      "name": "علی محمدی (تست هلیوم)",
+      "phone": "09115554321",
+      "subject": "consult",
+      "subjectTitle": "مشاوره درمانی و طب تسکینی",
+      "message": "با سلام، این یک تست خودکار با استفاده از ابزار Helium است."
+    },
+    {
+      "id": 6,
+      "date": "۱۴۰۵/۰۶/۰۵ - ۱۶:۵۷",
+      "status": "unread",
+      "type": "contact",
+      "typeTitle": "تماس با ما",
+      "name": "علی محمدی (تست هلیوم)",
+      "phone": "09115554321",
+      "subject": "consult",
+      "subjectTitle": "مشاوره درمانی و طب تسکینی",
+      "message": "با سلام، این یک تست خودکار با استفاده از ابزار Helium است."
+    },
+    {
       "id": 5,
       "date": "۱۴۰۵/۰۵/۳۰ - ۲۲:۱۱",
       "status": "unread",

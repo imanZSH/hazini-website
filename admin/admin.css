@@ -965,3 +965,46 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 768px) {
+  .admin-topbar {
+    padding: 0 16px;
+    height: 60px;
+  }
+
+  .topbar-title {
+    font-size: 1rem;
+  }
+
+  .admin-content {
+    padding: 16px;
+  }
+
+  .panel-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .panel-actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-input-wrap,
+  .search-input {
+    width: 100%;
+  }
+
+  .admin-modal {
+    margin: 10px;
+    max-height: 95vh;
+  }
+
+  .modal-body {
+    padding: 16px;
+  }
+}
+

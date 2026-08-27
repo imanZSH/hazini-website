@@ -61,6 +61,15 @@ function initMobileNav() {
   const navLinks = document.querySelector('.nav-links');
 
   if (menuBtn && navLinks) {
+    // Append mobile CTA if not already present
+    if (!navLinks.querySelector('.mobile-cta-btn')) {
+      const cta = document.createElement('a');
+      cta.href = 'services.html#request-form';
+      cta.className = 'mobile-cta-btn';
+      cta.innerHTML = '<i class="fa-solid fa-hand-holding-medical"></i> ثبت درخواست خدمات';
+      navLinks.appendChild(cta);
+    }
+
     menuBtn.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
