@@ -223,11 +223,50 @@ function saveLocalData() {
 // NAVIGATION & TABS
 // ----------------------------------------------------
 function initNavigation() {
+  const sidebar = document.getElementById('sidebar');
+  const toggleBtn = document.getElementById('mobile-toggle-btn');
+  
+  // Create or get sidebar backdrop for mobile
+  let backdrop = document.querySelector('.admin-sidebar-backdrop');
+  if (!backdrop) {
+    backdrop = document.createElement('div');
+    backdrop.className = 'admin-sidebar-backdrop';
+    document.body.appendChild(backdrop);
+  }
+
+  function closeMobileSidebar() {
+    if (sidebar) sidebar.classList.remove('mobile-open');
+    if (backdrop) backdrop.classList.remove('active');
+  }
+
+  function toggleMobileSidebar() {
+    if (!sidebar) return;
+    const isOpen = sidebar.classList.toggle('mobile-open');
+    if (backdrop) {
+      if (isOpen) backdrop.classList.add('active');
+      else backdrop.classList.remove('active');
+    }
+  }
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleMobileSidebar();
+    });
+  }
+
+  if (backdrop) {
+    backdrop.addEventListener('click', () => {
+      closeMobileSidebar();
+    });
+  }
+
   const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
   navItems.forEach(item => {
     item.addEventListener('click', () => {
       const tabId = item.getAttribute('data-tab');
       switchTab(tabId);
+      closeMobileSidebar();
     });
   });
 

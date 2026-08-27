@@ -1307,7 +1307,8 @@
       "name": "مدیر اصلی سیستم",
       "role": "مدیر کل",
       "password": "admin",
-      "createdAt": "۱۴۰۳/۰۱/۰۱"
+      "createdAt": "۱۴۰۳/۰۱/۰۱",
+      "lastLogin": "2026-08-27T14:23:48.417Z"
     }
   ],
   "adminConfig": {
