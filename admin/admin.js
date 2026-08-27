@@ -405,18 +405,18 @@ function renderSubmissions() {
 
     return `
       <tr class="${isUnread ? 'unread-row' : ''}">
-        <td>${(idx + 1).toLocaleString('fa-IR')}</td>
-        <td>${typeBadge}</td>
-        <td><strong>${name}</strong></td>
-        <td><a href="tel:${item.phone}" style="color: var(--primary); text-decoration: none; font-weight: bold;"><i class="fa-solid fa-phone" style="font-size: 0.8rem;"></i> ${item.phone}</a></td>
-        <td style="font-size: 0.85rem; color: var(--text-muted);">${item.date || '-'}</td>
-        <td>
+        <td data-label="ردیف">${(idx + 1).toLocaleString('fa-IR')}</td>
+        <td data-label="نوع فرم">${typeBadge}</td>
+        <td data-label="نام متقاضی"><strong>${name}</strong></td>
+        <td data-label="شماره تماس"><a href="tel:${item.phone}" style="color: var(--primary); text-decoration: none; font-weight: bold;"><i class="fa-solid fa-phone" style="font-size: 0.8rem;"></i> ${item.phone}</a></td>
+        <td data-label="تاریخ ثبت" style="font-size: 0.85rem; color: var(--text-muted);">${item.date || '-'}</td>
+        <td data-label="وضعیت">
           <span class="badge ${isUnread ? 'badge-danger' : 'badge-success'}">
             <i class="fa-solid ${isUnread ? 'fa-envelope' : 'fa-envelope-open'}"></i>
             ${isUnread ? 'خوانده نشده' : 'بررسی شده'}
           </span>
         </td>
-        <td>
+        <td data-label="عملیات">
           <div class="table-actions">
             <button class="btn-icon view" title="مشاهده کامل جزئیات" onclick="openSubmissionModal(${item.id})">
               <i class="fa-solid fa-eye"></i>
@@ -632,19 +632,19 @@ function renderArticles() {
 
   tbody.innerHTML = filtered.map((a, idx) => `
     <tr>
-      <td>
+      <td data-label="تصویر">
         <img src="${a.image || '../assets/images/100-15-600x400.jpg'}" style="width: 50px; height: 40px; border-radius: 6px; object-fit: cover;" onerror="this.src='../assets/images/100-15-600x400.jpg'">
       </td>
-      <td>
+      <td data-label="عنوان مقاله">
         <strong>${a.title}</strong>
         ${a.aparatId ? `<br><small style="color: var(--accent);"><i class="fa-solid fa-video"></i> آپارات: ${a.aparatId}</small>` : ''}
       </td>
-      <td><span class="badge badge-primary">${a.category || '-'}</span></td>
-      <td style="font-size: 0.85rem; color: var(--text-muted);">${a.date || '-'}</td>
-      <td>
+      <td data-label="دسته‌بندی"><span class="badge badge-primary">${a.category || '-'}</span></td>
+      <td data-label="تاریخ انتشار" style="font-size: 0.85rem; color: var(--text-muted);">${a.date || '-'}</td>
+      <td data-label="پیوست PDF">
         ${a.pdfFile ? `<a href="${a.pdfFile}" target="_blank" class="badge badge-danger"><i class="fa-solid fa-file-pdf"></i> PDF</a>` : '-'}
       </td>
-      <td>
+      <td data-label="عملیات">
         <div class="table-actions">
           <button class="btn-icon edit" title="ویرایش" onclick="editArticleModal(${a.id})">
             <i class="fa-solid fa-pen-to-square"></i>
@@ -799,16 +799,16 @@ function renderReports() {
 
   tbody.innerHTML = reports.map(r => `
     <tr>
-      <td><span class="badge badge-primary">${r.year || '-'}</span></td>
-      <td><strong>${r.title}</strong></td>
-      <td><code style="background: #F1F5F9; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem;">${r.fileName || 'report.pdf'}</code> (${r.size || '-'})</td>
-      <td style="font-size: 0.85rem; color: var(--text-muted); max-width: 300px;">${r.desc || '-'}</td>
-      <td>
+      <td data-label="سال گزارش"><span class="badge badge-primary">${r.year || '-'}</span></td>
+      <td data-label="عنوان گزارش"><strong>${r.title}</strong></td>
+      <td data-label="فایل و فرمت"><code style="background: #F1F5F9; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem;">${r.fileName || 'report.pdf'}</code> (${r.size || '-'})</td>
+      <td data-label="توضیحات" style="font-size: 0.85rem; color: var(--text-muted); max-width: 300px;">${r.desc || '-'}</td>
+      <td data-label="لینک دانلود">
         <a href="../${r.file}" target="_blank" class="btn btn-outline btn-sm">
           <i class="fa-solid fa-download"></i> دانلود
         </a>
       </td>
-      <td>
+      <td data-label="عملیات">
         <button class="btn-icon delete" title="حذف" onclick="deleteReport(${r.id})">
           <i class="fa-solid fa-trash-can"></i>
         </button>
@@ -911,20 +911,20 @@ function renderVideos() {
 
   tbody.innerHTML = videos.map(v => `
     <tr>
-      <td style="width: 80px;">
+      <td data-label="تصویر" style="width: 80px;">
         <img src="${v.image ? '../' + v.image : '../assets/images/mmmm-600x400.jpg'}" style="width: 68px; height: 46px; border-radius: 8px; object-fit: cover;" onerror="this.src='../assets/images/mmmm-600x400.jpg'">
       </td>
-      <td>
+      <td data-label="عنوان ویدیو">
         <strong style="color: var(--text-main); display: block; font-size: 0.95rem;">${v.title}</strong>
         ${v.subtitle ? `<small style="color: var(--text-muted); font-size: 0.8rem;">${v.subtitle}</small>` : ''}
       </td>
-      <td>
+      <td data-label="کد آپارات">
         <a href="https://www.aparat.com/v/${v.aparatId}" target="_blank" class="badge badge-warning" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none;">
           <i class="fa-solid fa-play"></i> ${v.aparatId}
         </a>
       </td>
-      <td style="font-size: 0.85rem; color: var(--text-muted);">${v.date || '-'}</td>
-      <td>
+      <td data-label="تاریخ انتشار" style="font-size: 0.85rem; color: var(--text-muted);">${v.date || '-'}</td>
+      <td data-label="عملیات">
         <div class="table-actions">
           <button class="btn-icon delete" title="حذف" onclick="deleteVideo(${v.id})">
             <i class="fa-solid fa-trash-can"></i>
@@ -1026,20 +1026,20 @@ function renderBrochures() {
 
   tbody.innerHTML = list.map(item => `
     <tr>
-      <td>
+      <td data-label="نوع سند">
         <span class="badge ${item.docKind === 'کتاب مرجع' ? 'badge-danger' : 'badge-info'}">
           <i class="fa-solid ${item.docKind === 'کتاب مرجع' ? 'fa-book' : 'fa-file-word'}"></i> ${item.docKind}
         </span>
       </td>
-      <td><strong>${item.title}</strong></td>
-      <td>${item.author || item.category || '-'}</td>
-      <td style="font-size: 0.85rem; color: var(--text-muted);">${item.size || '-'}</td>
-      <td>
+      <td data-label="عنوان کتاب / بروشور"><strong>${item.title}</strong></td>
+      <td data-label="مولف / مرجع">${item.author || item.category || '-'}</td>
+      <td data-label="حجم فایل" style="font-size: 0.85rem; color: var(--text-muted);">${item.size || '-'}</td>
+      <td data-label="لینک دانلود">
         <a href="../${item.file}" target="_blank" class="btn btn-outline btn-sm">
           <i class="fa-solid fa-download"></i> دانلود
         </a>
       </td>
-      <td>
+      <td data-label="عملیات">
         <button class="btn-icon delete" title="حذف" onclick="deleteBrochureOrBook('${item.docKind}', ${item.id})">
           <i class="fa-solid fa-trash-can"></i>
         </button>
@@ -1249,7 +1249,7 @@ function renderUsers() {
     
     return `
       <tr>
-        <td>
+        <td data-label="نام و نام خانوادگی">
           <div style="display: flex; align-items: center; gap: 12px;">
             <div style="width: 40px; height: 40px; border-radius: 10px; background: #E0F2F1; color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: bold;">
               ${(user.name || user.username).charAt(0)}
@@ -1260,18 +1260,18 @@ function renderUsers() {
             </div>
           </div>
         </td>
-        <td style="direction: ltr; text-align: right; font-family: monospace; font-weight: 600; color: var(--primary);">
-          @${user.username}
+        <td data-label="نام کاربری">
+          <span style="direction: ltr; font-family: monospace; font-weight: 600; color: var(--primary); font-size: 0.95rem;">@${user.username}</span>
         </td>
-        <td>
+        <td data-label="نقش و دسترسی">
           <span class="badge ${roleBadge}" style="font-size: 0.8rem; padding: 4px 10px; border-radius: 6px; font-weight: 600;">
             ${user.role || 'مدیر کل'}
           </span>
         </td>
-        <td style="color: var(--text-muted); font-size: 0.85rem;">
+        <td data-label="تاریخ ایجاد" style="color: var(--text-muted); font-size: 0.85rem;">
           ${user.createdAt || '۱۴۰۳/۰۱/۰۱'}
         </td>
-        <td style="text-align: center;">
+        <td data-label="عملیات" style="text-align: center;">
           <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
             <button class="btn btn-outline btn-sm" onclick="openUserModal(${user.id})" title="ویرایش و تغییر رمز">
               <i class="fa-solid fa-pen-to-square"></i> ویرایش

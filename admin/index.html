@@ -693,11 +693,11 @@
         <input type="hidden" id="user-edit-id">
         <div class="modal-body">
           <div class="form-grid">
-            <div class="form-group">
+            <div class="form-group full">
               <label class="form-label">نام و نام خانوادگی *</label>
               <input type="text" id="user-name" class="form-input" required placeholder="مثال: دکتر عبدالرحیم حزینی">
             </div>
-            <div class="form-group">
+            <div class="form-group full">
               <label class="form-label">نام کاربری (انگلیسی) *</label>
               <input type="text" id="user-username" class="form-input" required placeholder="مثال: dr.hazini" style="direction: ltr; text-align: left;">
             </div>
@@ -711,9 +711,9 @@
             </div>
             <div class="form-group">
               <label class="form-label" id="user-pass-label">رمز عبور *</label>
-              <div style="position: relative;">
-                <input type="password" id="user-password" class="form-input" placeholder="حداقل ۴ کاراکتر..." style="padding-left: 36px;">
-                <button type="button" class="btn-icon" style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%);" onclick="toggleUserModalPass()">
+              <div style="position: relative; width: 100%; display: flex; align-items: center;">
+                <input type="password" id="user-password" class="form-input" placeholder="حداقل ۴ کاراکتر..." style="width: 100%; padding-left: 40px;">
+                <button type="button" style="position: absolute; left: 10px; background: none; border: none; color: #94A3B8; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; font-size: 1rem;" onclick="toggleUserModalPass()" aria-label="نمایش رمز">
                   <i class="fa-solid fa-eye" id="user-eye-icon"></i>
                 </button>
               </div>
